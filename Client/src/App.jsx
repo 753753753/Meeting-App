@@ -14,6 +14,7 @@ import PrivateRoute from './Components/PrivateRoute/PrivateRoute';
 import { Navigate } from 'react-router-dom';
 import { SpeechProvider } from './context/SpeechContext';
 import ErrorBoundary from "./ErrorBoundary.jsx" // Import the ErrorBoundary component
+import AdminRegister from './Admin/AdminRegister.jsx';
 
 const App = () => {
   const DefaultRedirect = () => {
@@ -29,6 +30,7 @@ const App = () => {
             <Route path="/" element={<DefaultRedirect />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path='/adminregister' element = {<AdminRegister/>} />
             <Route
               path="/dashboard"
               element={

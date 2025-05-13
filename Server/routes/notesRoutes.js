@@ -3,8 +3,9 @@ const router = express.Router();
 const PreviousMeeting = require("../models/PreviousMeeting");
 const Notes = require("../models/Notes"); // Import Notes model
 const { getAIUpdatedNotes } = require("../utils/summarizeText"); // AI summarization logic
+const authenticate = require("../middleware/authMiddleware");
 
-router.post("/save", async (req, res) => {
+router.post("/save", authenticate , async (req, res) => {
   const { roomid, transcript } = req.body;
   console.log("hii")
   console.log(roomid, transcript);
@@ -35,6 +36,7 @@ router.post("/save", async (req, res) => {
         endedAt: meeting.endedAt,
       },
       summary,
+      createdBy: req.user.id, // <-- capture current user
     });
 
     await newNote.save();
@@ -49,9 +51,9 @@ router.post("/save", async (req, res) => {
 });
 
 // Get all notes
-router.get("/notes", async (req, res) => {
+router.get("/notes",authenticate, async (req, res) => {
   try {
-    const notes = await Notes.find(); // Fetch all notes
+    const notes = await Notes.find({ createdBy: req.user.id }).sort({ date: -1 }); // Fetch all notes
     res.status(200).json({ notes });
   } catch (error) {
     console.error('Error fetching notes:', error);
@@ -60,7 +62,7 @@ router.get("/notes", async (req, res) => {
 });
 
 // Download notes for a specific meeting
-router.get("/download-notes/:meetingId", async (req, res) => {
+router.get("/download-notes/:meetingId", authenticate , async (req, res) => {
   try {
     const meetingId = req.params.meetingId;
     const note = await Notes.findById(meetingId);
@@ -83,7 +85,7 @@ router.get("/download-notes/:meetingId", async (req, res) => {
 });
 
 // Delete Note by meetingId
-router.delete('/:id', async (req, res) => {
+router.delete('/:id',authenticate, async (req, res) => {
   try {
     const noteId = req.params.id;
     const deletedNote = await Notes.findByIdAndDelete(noteId);

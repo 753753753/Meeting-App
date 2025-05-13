@@ -5,7 +5,7 @@ exports.createPreviousMeeting = async (req, res) => {
   console.log("enter");
   const meetingId = req.params.id;
   console.log(meetingId);
-
+  console.log(req.user.id)
   try {
     const meeting = await UpcomingMeeting.findById(meetingId);
     console.log(meeting);
@@ -17,6 +17,7 @@ exports.createPreviousMeeting = async (req, res) => {
       date: meeting.date,
       participants: meeting.participants,
       roomId: meeting._id, // Set the original ID
+      createdBy: req.user.id, // <-- capture current user
     });
     await previous.save();
 
@@ -32,7 +33,7 @@ exports.createPreviousMeeting = async (req, res) => {
 
 exports.getPreviousMeetings = async (req, res) => {
   try {
-    const meetings = await PreviousMeeting.find().sort({ date: -1 }); // Latest first
+    const meetings = await PreviousMeeting.find({ createdBy: req.user.id }).sort({ date: -1 })
     res.status(200).json(meetings);
   } catch (err) {
     res.status(500).json({ message: "Failed to fetch previous meetings." });

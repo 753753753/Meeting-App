@@ -20,7 +20,7 @@ export default function Register() {
       console.log(data); // Log the response to see what is returned
       if (data.token) {
         // If registration is successful, save the token and user in context
-        login(data.user, data.token);
+        login(data.user, data.token , data.role);
         navigate('/dashboard'); // Redirect to login page after successful registration
       } else {
         setError('Registration failed. Please try again.');

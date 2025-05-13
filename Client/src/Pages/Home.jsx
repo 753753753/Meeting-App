@@ -15,6 +15,7 @@ import EditMeetingModal from '../Components/Modal/EditMeetingModal';
 import { updateMeeting } from "../utils/api";
 import { SpeechContext } from '../context/SpeechContext';
 import StartMeetingModal from '../Components/Modal/StartMeetingModal';
+import { useUser } from '../context/UserContext'; // adjust path as needed
 
 export default function Home() {
   const navigate = useNavigate();
@@ -24,8 +25,9 @@ export default function Home() {
   const [selectedMeeting, setSelectedMeeting] = useState(null);
   const [isStartModalOpen, setIsStartModalOpen] = useState(false);
   const [meetingToStart, setMeetingToStart] = useState(null);
-  const {setWithRecording } = useContext(SpeechContext);
-
+  const { setWithRecording } = useContext(SpeechContext);
+  const { role } = useUser(); // Destructure role from context
+  console.log(role)
   const actions = [
     { label: 'New Meeting', text: "Start an instant meeting", color: 'bg-orange-500', icon: <MdAdd size={24} /> },
     { label: 'Join Meeting', text: "Via invitation link", color: 'bg-blue-500', icon: <MdVideoCall size={24} /> },
@@ -158,10 +160,19 @@ export default function Home() {
             <motion.div
               onClick={() => {
                 if (item.onClick) {
-                  item.onClick(); // Trigger the navigation if it's defined
+                  item.onClick();
                 } else {
-                  const key = item.label.toLowerCase().split(" ")[0]; // 'new', 'join', 'schedule'
-                  if (['new', 'join', 'schedule'].includes(key)) setActiveModal(key);
+                  const key = item.label.toLowerCase().split(" ")[0];
+
+                  if (key === 'schedule') {
+                    if (role === 'admin') {
+                      setActiveModal('schedule');
+                    } else {
+                      alert('Only admin can access the schedule feature.');
+                    }
+                  } else if (['new', 'join'].includes(key)) {
+                    setActiveModal(key);
+                  }
                 }
               }}
               whileHover={{ scale: 1.07 }}
