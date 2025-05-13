@@ -1,11 +1,10 @@
-import React, { useEffect, useRef, useState, useContext } from 'react';
-import { useParams } from 'react-router-dom';
 import { ZegoUIKitPrebuilt } from '@zegocloud/zego-uikit-prebuilt';
+import { useContext, useEffect, useRef } from 'react';
+import { useParams } from 'react-router-dom';
 import { appId, serverSecret } from '../Config';
-import { endMeeting } from '../utils/api'; // <-- Import it
-import { recognition } from '../utils/speechRecognition';
 import { SpeechContext } from '../context/SpeechContext';
-import { saveMeetingData } from '../utils/api';
+import { deletePersonalMeeting, endMeeting, saveMeetingData } from '../utils/api'; // <-- Import deletePersonalMeeting
+import { recognition } from '../utils/speechRecognition';
 
 function Room() {
   const { roomid } = useParams();
@@ -72,10 +71,18 @@ function Room() {
           }
 
           setTranscript("");
+
+          // Delete the meeting after saving it
+          await deletePersonalMeeting(roomid);
+          console.log(`Meeting with ID ${roomid} has been deleted.`);
         } else {
           await endMeeting(roomid);
           alert('Meeting saved to Previous Meetings...😄');
           window.location.href = '/dashboard';
+
+          // Delete the meeting after saving it
+          await deletePersonalMeeting(roomid);
+          console.log(`Meeting with ID ${roomid} has been deleted.`);
         }
       },
     });

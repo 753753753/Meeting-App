@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const PreviousMeeting = require("../models/PreviousMeeting");
 const Notes = require("../models/Notes"); // Import Notes model
-const { getAIUpdatedNotes } = require("../utils/summarizeText"); // AI summarization logic
 const authenticate = require("../middleware/authMiddleware");
 
 router.post("/save", authenticate , async (req, res) => {

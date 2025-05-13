@@ -123,6 +123,75 @@ export const updateMeeting = async (meeting) => {
   return data.updatedMeeting;
 };
 
+// Create Personal Meeting
+export const createPersonalMeeting = async (title, date, password ,participants = []) => {
+  const token = localStorage.getItem("authToken"); // Assuming JWT stored in localStorage
+  console.log(token);
+  const response = await fetch(`${API_URL}/Personalmeetings/create`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ title, date, password, participants }),
+  });
+
+  const data = await response.json();
+  return data;
+};
+
+// ✅ Get all personal meetings for logged-in user
+export const getPersonalMeetings = async () => {
+  const token = localStorage.getItem("authToken");
+
+  const response = await fetch(`${API_URL}/Personalmeetings`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const data = await response.json();
+  return data;
+};
+
+export const deletePersonalMeeting = async (id) => {
+  const token = localStorage.getItem("authToken");
+
+  const response = await fetch(`${API_URL}/Personalmeetings/${id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const data = await response.json();
+  return data;
+};
+
+export const updatePersonalMeeting = async (meeting) => {
+  const token = localStorage.getItem("authToken");
+  const response = await fetch(
+    `${API_URL}/Personalmeetings/edit/${meeting._id}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        title: meeting.title,
+        date: meeting.date,
+      }),
+    }
+  );
+
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.message || "Update failed");
+  return data.updatedMeeting;
+};
+
+
 // Move a meeting to "previous"
 export const endMeeting = async (id) => {
   const token = localStorage.getItem("authToken");

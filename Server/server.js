@@ -8,7 +8,7 @@ const authRoutes = require("./routes/authRoutes");
 const UpcomingmeetingRoutes = require("./routes/UpcomingmeetingRoutes");
 const notesRoutes = require("./routes/notesRoutes");
 const PreviousmeetingRoutes = require("./routes/PreviousmeetingRoutes");
-
+const PersonalmeetingRoutes = require('./routes/PersonalmeetingRoutes')
 // Load environment variables
 dotenv.config();
 
@@ -38,6 +38,7 @@ app.use("/api/auth", authRoutes); // Login/Register
 app.use("/api/Upcomingmeetings", UpcomingmeetingRoutes); // Create/Join meetings
 app.use("/api/notes", notesRoutes); // Meeting notes & transcripts
 app.use("/api/Previousmeetings" , PreviousmeetingRoutes )
+app.use('/api/Personalmeetings' , PersonalmeetingRoutes)
 // Error handling middleware (optional but recommended)
 app.use((err, req, res, next) => {
   console.error(err.stack);
