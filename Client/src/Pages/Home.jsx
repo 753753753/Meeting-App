@@ -216,18 +216,6 @@ export default function Home() {
                   className="bg-[#1C1F2E] p-4 rounded-lg shadow"
                 >
                   <div className="absolute top-4 right-4 flex gap-2">
-                    <button className="text-white hover:text-blue-400 cursor-pointer" onClick={() => {
-                      setSelectedMeeting(meeting);
-                      setIsEditModalOpen(true);
-                    }}>
-                      <FaEdit />
-                    </button>
-                    <button
-                      className="text-white hover:text-red-400 cursor-pointer"
-                      onClick={() => handleDelete(meeting._id)}
-                    >
-                      <FaTrashAlt />
-                    </button>
                   </div>
                   <div className="text-white mb-2">
                     <FaRegCalendarAlt className="text-white text-2xl" />

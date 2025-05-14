@@ -1,39 +1,85 @@
 // src/context/UserContext.js
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 
-// Create context for user authentication
 const UserContext = createContext();
 
-// UserProvider component to wrap your app and provide context
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem('authToken') || null);
-  const [role , setrole] = useState(localStorage.getItem('role') || null);
+  const [role, setRole] = useState(localStorage.getItem('role') || null);
+  const [teamMembers, setTeamMembers] = useState([]); // ✅ NEW
 
-  const login = (userData, authToken , role) => {
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+
+    // Optionally auto-fetch team members if admin is logged in
+    if (role === 'admin' && token) {
+      fetchTeamMembers();
+    }
+  }, [role, token]);
+
+  // ✅ Fetch team members from backend
+  const fetchTeamMembers = async () => {
+    try {
+      const response = await fetch('http://localhost:5000/api/adminroutes/team', {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await response.json();
+      if (!data.error) {
+        setTeamMembers(data); // set fetched members
+      }
+    } catch (error) {
+      console.error('Failed to fetch team members:', error);
+    }
+  };
+
+  const login = (userData, authToken, userRole) => {
     setUser(userData);
     setToken(authToken);
-    setrole(role)
-    localStorage.setItem('authToken', authToken); // Store token in localStorage
-    localStorage.setItem('role', role); // Store token in localStorage
+    setRole(userRole);
+
+    localStorage.setItem('authToken', authToken);
+    localStorage.setItem('role', userRole);
+    localStorage.setItem('user', JSON.stringify(userData));
   };
 
   const logout = () => {
     setUser(null);
     setToken(null);
-    setrole(null)
+    setRole(null);
+    setTeamMembers([]); // ✅ Clear on logout
+
     localStorage.removeItem('authToken');
     localStorage.removeItem('role');
+    localStorage.removeItem('user');
   };
 
   return (
-    <UserContext.Provider value={{ user, token, login, logout , role }}>
+    <UserContext.Provider
+      value={{
+        user,
+        token,
+        role,
+        login,
+        logout,
+        teamMembers,
+        setTeamMembers,
+        fetchTeamMembers, // ✅ Optional helper
+      }}
+    >
       {children}
     </UserContext.Provider>
   );
 };
 
-// Custom hook to access the user context
 export const useUser = () => {
   return useContext(UserContext);
 };

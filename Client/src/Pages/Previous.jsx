@@ -6,10 +6,11 @@ import user3 from '../assets/avatar (2).png';
 import user4 from '../assets/avatar (3).png';
 import { getPreviousMeetings, deletePreviousMeeting } from '../utils/api';
 import { useState, useEffect } from 'react';
+import { useUser } from '../context/UserContext'; // adjust path as needed
 function Previous() {
   const [meetings, setMeetings] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const { role } = useUser(); // Destructure role from context
   useEffect(() => {
     const fetchMeetings = async () => {
       try {
@@ -56,7 +57,7 @@ function Previous() {
               className="bg-[#1C1F2E] p-4 rounded-lg shadow relative"
             >
               <div className="absolute top-4 right-4 flex gap-2">
-                <button className="text-white hover:text-red-400 cursor-pointer" onClick={() => handleDelete(meeting._id)}>
+                <button className="text-white hover:text-red-400 cursor-pointer" onClick={() => handleDelete(meeting._id)}  style={{ display: role === 'admin' ? 'block' : 'none' }}>
                   <FaTrashAlt />
                 </button>
               </div>

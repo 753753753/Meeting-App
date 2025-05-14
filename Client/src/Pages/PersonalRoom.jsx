@@ -130,7 +130,7 @@ function PersonalRoom() {
         ))
       )}
 
-      <div className="bg-[#1C1F2E] p-4 rounded-lg shadow-md mt-5">
+      <div className="bg-[#1C1F2E] p-4 rounded-lg shadow-md mt-5" style={{ display: role === 'admin' ? 'block' : 'none' }} >
         <button
           className="bg-[#252A41] hover:bg-[#2E334E] text-white text-sm px-4 py-2 rounded w-full flex items-center justify-center gap-2 cursor-pointer"
           onClick={() => setShowModal(true)}

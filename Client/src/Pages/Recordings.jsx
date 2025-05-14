@@ -4,10 +4,10 @@ import { RiFilePdf2Fill } from 'react-icons/ri';
 import { FaFileDownload } from 'react-icons/fa';
 import { FaShare } from 'react-icons/fa';
 import { getAllNotes, deleteNoteById, downloadNoteById } from '../utils/api';
-
+import { useUser } from '../context/UserContext'; // adjust path as needed
 const Recordings = () => {
   const [notes, setNotes] = useState([]);
-
+ const { role } = useUser(); // Destructure role from context
   useEffect(() => {
     fetchNotes();
   }, []);
@@ -92,7 +92,7 @@ const Recordings = () => {
           {notes.map((note) => (
             <div key={note._id} className="bg-[#1C1F2E] p-4 rounded-lg shadow rounded-xl relative">
               {/* Top-right icons */}
-              <div className="absolute top-4 right-4 flex gap-2">
+              <div className="absolute top-4 right-4 flex gap-2"  style={{ display: role === 'admin' ? 'block' : 'none' }}>
                 <button
                   onClick={() => deleteNote(note._id)}  // Handle delete
                   className="text-white hover:text-red-400 cursor-pointer"

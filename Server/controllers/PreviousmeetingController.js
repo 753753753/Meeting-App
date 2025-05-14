@@ -1,5 +1,6 @@
 const UpcomingMeeting = require('../models/Meeting');
 const PreviousMeeting = require('../models/PreviousMeeting')
+const User = require('../models/User');
 
 exports.createPreviousMeeting = async (req, res) => {
   console.log("enter");
@@ -33,7 +34,17 @@ exports.createPreviousMeeting = async (req, res) => {
 
 exports.getPreviousMeetings = async (req, res) => {
   try {
-    const meetings = await PreviousMeeting.find({ createdBy: req.user.id }).sort({ date: -1 })
+    const currentUser = await User.findById(req.user.id);
+
+    let createdByIds = [req.user.id]; // User's own previous meetings
+
+    // If user has a teamLeader, include their meetings too
+    if (currentUser.teamLeader) {
+      createdByIds.push(currentUser.teamLeader);
+    }
+
+    const meetings = await PreviousMeeting.find({ createdBy: { $in: createdByIds } }).sort({ date: -1 });
+
     res.status(200).json(meetings);
   } catch (err) {
     res.status(500).json({ message: "Failed to fetch previous meetings." });

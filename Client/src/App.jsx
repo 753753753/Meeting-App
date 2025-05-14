@@ -15,6 +15,7 @@ import { Navigate } from 'react-router-dom';
 import { SpeechProvider } from './context/SpeechContext';
 import ErrorBoundary from "./ErrorBoundary.jsx" // Import the ErrorBoundary component
 import AdminRegister from './Admin/AdminRegister.jsx';
+import AdminDashboard from './Dashboard/AdminDashboard.jsx';
 
 const App = () => {
   const DefaultRedirect = () => {
@@ -31,6 +32,7 @@ const App = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path='/adminregister' element = {<AdminRegister/>} />
+             <Route path='/admindashboard' element = {<AdminDashboard/>} />
             <Route
               path="/dashboard"
               element={

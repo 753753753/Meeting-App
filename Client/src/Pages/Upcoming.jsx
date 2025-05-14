@@ -10,7 +10,7 @@ import { updateMeeting } from "../utils/api";
 import { SpeechContext } from '../context/SpeechContext';
 import { useNavigate } from 'react-router-dom';
 import StartMeetingModal from '../Components/Modal/StartMeetingModal';
-
+import { useUser } from '../context/UserContext'; // adjust path as needed
 const Upcoming = () => {
   const navigate = useNavigate();
   const [meetings, setMeetings] = useState([]);
@@ -19,7 +19,7 @@ const Upcoming = () => {
   const [isStartModalOpen, setIsStartModalOpen] = useState(false);
   const [meetingToStart, setMeetingToStart] = useState(null);
   const { withRecording, setWithRecording } = useContext(SpeechContext);
-
+  const { role } = useUser(); // Destructure role from context
   useEffect(() => {
     const fetchMeetings = async () => {
       try {
@@ -119,12 +119,12 @@ const Upcoming = () => {
                 <button className="text-white hover:text-blue-400 cursor-pointer" onClick={() => {
                   setSelectedMeeting(meeting);
                   setIsEditModalOpen(true);
-                }}>
+                }} style={{ display: role === 'admin' ? 'block' : 'none' }} >
                   <FaEdit />
                 </button>
                 <button
                   className="text-white hover:text-red-400 cursor-pointer"
-                  onClick={() => handleDelete(meeting._id)}
+                  onClick={() => handleDelete(meeting._id)} style={{ display: role === 'admin' ? 'block' : 'none' }} 
                 >
                   <FaTrashAlt />
                 </button>

@@ -8,7 +8,7 @@ const Header = ({ toggleSidebar }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
-  const { logout } = useUser(); // ✅ Use context
+  const { logout, role } = useUser(); // ✅ Use context
 
   const handleLogout = () => {
     logout(); // ✅ Use centralized logout function
@@ -48,6 +48,14 @@ const Header = ({ toggleSidebar }) => {
             >
               Logout
             </button>
+            {role === 'admin' && (
+              <button
+                className="w-full text-left px-4 py-2 hover:bg-gray-800 cursor-pointer"
+                onClick={() => navigate('/admindashboard')}
+              >
+                ManageUser
+              </button>
+            )}
           </div>
         )}
       </div>

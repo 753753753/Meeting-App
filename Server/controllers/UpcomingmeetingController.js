@@ -1,5 +1,5 @@
 const Meeting = require('../models/Meeting');
-
+const User = require('../models/User');
 exports.createMeeting = async (req, res) => {
   try {
     const { title, date, participants } = req.body;
@@ -21,7 +21,17 @@ exports.createMeeting = async (req, res) => {
 
 exports.getMeetings = async (req, res) => {
   try {
-    const meetings = await Meeting.find({ createdBy: req.user.id });
+    const currentUser = await User.findById(req.user.id);
+
+    let createdByIds = [req.user.id]; // Default: fetch user's own meetings
+
+    // If the user is a team member and has a teamLeader
+    if (currentUser.teamLeader) {
+      createdByIds.push(currentUser.teamLeader); // Also fetch meetings created by their teamLeader
+    }
+
+    const meetings = await Meeting.find({ createdBy: { $in: createdByIds } });
+
     res.status(200).json({ meetings });
   } catch (error) {
     res.status(500).json({ message: 'Error fetching meetings', error });

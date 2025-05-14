@@ -3,7 +3,7 @@ const router = express.Router();
 const PreviousMeeting = require("../models/PreviousMeeting");
 const Notes = require("../models/Notes"); // Import Notes model
 const authenticate = require("../middleware/authMiddleware");
-
+const User = require('../models/User');
 router.post("/save", authenticate , async (req, res) => {
   const { roomid, transcript } = req.body;
   console.log("hii")
@@ -50,9 +50,19 @@ router.post("/save", authenticate , async (req, res) => {
 });
 
 // Get all notes
-router.get("/notes",authenticate, async (req, res) => {
+router.get("/notes", authenticate, async (req, res) => {
   try {
-    const notes = await Notes.find({ createdBy: req.user.id }).sort({ date: -1 }); // Fetch all notes
+    const currentUser = await User.findById(req.user.id);
+
+    let createdByIds = [req.user.id]; // Default: fetch user's own notes
+
+    // If user has a teamLeader, include notes created by their teamLeader
+    if (currentUser.teamLeader) {
+      createdByIds.push(currentUser.teamLeader);
+    }
+
+    const notes = await Notes.find({ createdBy: { $in: createdByIds } }).sort({ date: -1 });
+
     res.status(200).json({ notes });
   } catch (error) {
     console.error('Error fetching notes:', error);

@@ -9,6 +9,7 @@ const UpcomingmeetingRoutes = require("./routes/UpcomingmeetingRoutes");
 const notesRoutes = require("./routes/notesRoutes");
 const PreviousmeetingRoutes = require("./routes/PreviousmeetingRoutes");
 const PersonalmeetingRoutes = require('./routes/PersonalmeetingRoutes')
+const AdminRoutes = require('./routes/AdminRoutes');
 // Load environment variables
 dotenv.config();
 
@@ -18,7 +19,7 @@ connectDB();
 const app = express();
 
 // Middleware
-const allowedOrigins = ['http://localhost:5173']; // Your frontend URL
+const allowedOrigins = ['http://localhost:5174']; // Your frontend URL
 
 app.use(
   cors({
@@ -39,6 +40,8 @@ app.use("/api/Upcomingmeetings", UpcomingmeetingRoutes); // Create/Join meetings
 app.use("/api/notes", notesRoutes); // Meeting notes & transcripts
 app.use("/api/Previousmeetings" , PreviousmeetingRoutes )
 app.use('/api/Personalmeetings' , PersonalmeetingRoutes)
+app.use('/api/adminroutes' , AdminRoutes );
+
 // Error handling middleware (optional but recommended)
 app.use((err, req, res, next) => {
   console.error(err.stack);
