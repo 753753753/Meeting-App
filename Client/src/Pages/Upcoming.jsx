@@ -13,7 +13,7 @@ import StartMeetingModal from '../Components/Modal/StartMeetingModal';
 import { useUser } from '../context/UserContext'; // adjust path as needed
 import { useDispatch } from 'react-redux';
 import { appendTranscript, clearTranscript } from '../redux/slices/transcriptSlice';
-
+import recognition from '../utils/speechRecognition';
 
 const Upcoming = () => {
   const navigate = useNavigate();
@@ -47,10 +47,15 @@ const Upcoming = () => {
   };
 
   const handleCopyInvitation = (roomid) => {
-    const inviteURL = `${window.location.origin}/room/${roomid}`;
-    navigator.clipboard.writeText(inviteURL)
-      .then(() => alert("Invitation link copied to clipboard!"))
-      .catch((err) => console.error('Failed to copy:', err));
+    if (role === 'admin') {
+      const inviteURL = `${window.location.origin}/room/${roomid}`;
+      navigator.clipboard.writeText(inviteURL)
+        .then(() => alert("Invitation link copied to clipboard!"))
+        .catch((err) => console.error('Failed to copy:', err));
+    }
+    else {
+      alert("Oops! This feature is only available to admins.");
+    }
   };
 
   const handleSave = async () => {
@@ -69,31 +74,46 @@ const Upcoming = () => {
   const dispatch = useDispatch();
 
   const handleStart = (meetingId, withRecording = false) => {
-    const recognition = new window.webkitSpeechRecognition();
-    recognition.continuous = true;
-    recognition.interimResults = true;
-    recognition.lang = 'en-US';
+  const recognition = new window.webkitSpeechRecognition();
+  recognition.continuous = true;
+  recognition.interimResults = true;
+  recognition.lang = 'en-US';
 
-    recognition.onresult = (event) => {
-      let currentTranscript = '';
-      for (let i = event.resultIndex; i < event.results.length; i++) {
-        currentTranscript += event.results[i][0].transcript;
+  recognition.onresult = (event) => {
+    let interimTranscript = '';
+    let finalTranscript = '';
+
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      const transcript = event.results[i][0].transcript;
+      if (event.results[i].isFinal) {
+        finalTranscript += transcript;
+      } else {
+        interimTranscript += transcript;
       }
-      dispatch(appendTranscript(currentTranscript));
-      console.log('Live transcript:', currentTranscript);
-    };
-
-    dispatch(clearTranscript()); // Clear only once at start
-    setIsListening(true);
-
-    if (withRecording) {
-      console.log('Recording started...');
-      setWithRecording(true);
     }
 
-    recognition.start();
-    navigate(`/room/${meetingId}`);
+    if (interimTranscript) {
+      console.log('Live transcript:', interimTranscript);
+    }
+
+    if (finalTranscript) {
+      dispatch(appendTranscript(finalTranscript.trim()));
+      console.log('Final transcript:', finalTranscript);
+    }
   };
+
+  dispatch(clearTranscript()); // Clear only once at start
+  setIsListening(true);
+
+  if (withRecording) {
+    console.log('Recording started...');
+    setWithRecording(true);
+  }
+
+  recognition.start();
+  navigate(`/room/${meetingId}`);
+};
+
 
 
   return (

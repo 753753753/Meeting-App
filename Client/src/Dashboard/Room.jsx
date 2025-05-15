@@ -5,9 +5,10 @@ import { SpeechContext } from '../context/SpeechContext';
 import { ZegoUIKitPrebuilt } from '@zegocloud/zego-uikit-prebuilt';
 import { appId, serverSecret } from '../Config';
 import { deletePersonalMeeting, endMeeting, saveMeetingData } from '../utils/api';
-import { recognition } from '../utils/speechRecognition';
+import recognition from '../utils/speechRecognition';
 import { useDispatch } from 'react-redux';
 import { clearTranscript } from '../redux/slices/transcriptSlice';
+import { useUser } from '../context/UserContext'; // adjust path as needed
 
 function Room() {
   const dispatch = useDispatch();
@@ -16,6 +17,7 @@ function Room() {
   const transcript = useSelector(state => state.transcript);
   const transcriptRef = useRef("");
   const { isListening, setIsListening, withRecording } = useContext(SpeechContext);
+  const { role } = useUser(); // moved inside the component
 
   useEffect(() => {
     transcriptRef.current = transcript; // keep latest transcript in ref
@@ -58,33 +60,34 @@ function Room() {
       onLeaveRoom: async () => {
         console.log("Final Transcript:", transcriptRef.current);
 
-        if (withRecording) {
-          await endMeeting(roomid);
-          alert('Meeting saved to Previous Meetings And Notes Available in a few seconds...😄');
-          window.location.href = '/dashboard';
+        if (role === 'admin') {
+          if (withRecording) {
+            await endMeeting(roomid);
+            alert('Meeting saved to Previous Meetings And Notes Available in a few seconds...😄');
+            window.location.href = '/dashboard';
+            const summary = await saveMeetingData(roomid, transcriptRef.current);
+            console.log('AI Summary:', summary);
 
-          const summary = await saveMeetingData(roomid, transcriptRef.current);
-          console.log('AI Summary:', summary);
+            if (isListening) {
+              recognition.stop();
+              setIsListening(false);
+              console.log("Speech recognition stopped");
+            }
 
-          if (isListening) {
-            recognition.stop();
-            setIsListening(false);
-            console.log("Speech recognition stopped");
+            dispatch(clearTranscript());
+            await deletePersonalMeeting(roomid);
+            console.log(`Meeting with ID ${roomid} has been deleted.`);
+          } else {
+            await endMeeting(roomid);
+            alert('Meeting saved to Previous Meetings...😄');
+            await deletePersonalMeeting(roomid);
+            console.log(`Meeting with ID ${roomid} has been deleted.`);
           }
-
-          // clear transcript on end
-          dispatch(clearTranscript());
-
-          await deletePersonalMeeting(roomid);
-          console.log(`Meeting with ID ${roomid} has been deleted.`);
         } else {
-          await endMeeting(roomid);
-          alert('Meeting saved to Previous Meetings...😄');
-          window.location.href = '/dashboard';
-
-          await deletePersonalMeeting(roomid);
-          console.log(`Meeting with ID ${roomid} has been deleted.`);
+          alert('You have left the meeting.');
         }
+
+        window.location.href = '/dashboard';
       },
     });
 

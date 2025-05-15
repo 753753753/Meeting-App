@@ -1,13 +1,23 @@
 // redux/slices/transcriptSlice.js
 import { createSlice } from '@reduxjs/toolkit';
 
+const initialState = {
+  content: '',
+};
+
 const transcriptSlice = createSlice({
   name: 'transcript',
-  initialState: '',
+  initialState,
   reducers: {
-    setTranscript: (state, action) => action.payload,
-    appendTranscript: (state, action) => (state ? state + ' ' + action.payload : action.payload),
-    clearTranscript: () => '',
+    setTranscript: (state, action) => {
+      state.content = action.payload;
+    },
+    appendTranscript: (state, action) => {
+      state.content += (state.content ? ' ' : '') + action.payload;
+    },
+    clearTranscript: (state) => {
+      state.content = '';
+    },
   },
 });
 

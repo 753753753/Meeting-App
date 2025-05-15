@@ -1,7 +1,11 @@
-// src/utils/speechRecognition.js
+// utils/speechRecognition.js
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
-export const recognition = new SpeechRecognition();
+const recognition = new SpeechRecognition();
+
 recognition.continuous = true;
+recognition.interimResults = false; // Set to `true` if you want live typing
 recognition.lang = 'en-US';
-recognition.interimResults = true; // Must be true for live transcription
+recognition.maxAlternatives = 1;
+
+export default recognition;
