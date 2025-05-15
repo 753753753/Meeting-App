@@ -1,16 +1,15 @@
+// SpeechContext.js
 import React, { createContext, useState } from 'react';
 
-// Create the SpeechContext
 export const SpeechContext = createContext();
 
 export const SpeechProvider = ({ children }) => {
-  // State to manage transcript, listening state, and withRecording
-  const [transcript, setTranscript] = useState('');
+  // Only manage isListening and withRecording now
   const [isListening, setIsListening] = useState(false);
-  const [withRecording, setWithRecording] = useState(false); // Add state for withRecording
+  const [withRecording, setWithRecording] = useState(false);
 
   return (
-    <SpeechContext.Provider value={{ transcript, setTranscript, isListening, setIsListening, withRecording, setWithRecording }}>
+    <SpeechContext.Provider value={{ isListening, setIsListening, withRecording, setWithRecording }}>
       {children}
     </SpeechContext.Provider>
   );

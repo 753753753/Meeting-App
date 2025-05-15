@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { registerUser } from '../utils/api';
+import { registerUser , googleRegisterUser} from '../utils/api';
 import { useNavigate } from 'react-router-dom'; // Used for redirect
 import { useUser } from '../context/UserContext';
 import user from '../assets/LoginUser.png';
+import { auth, provider } from '../firebase';
+import { signInWithPopup } from 'firebase/auth';
 
 export default function Register() {
   const [name, setName] = useState('');
@@ -30,6 +32,28 @@ export default function Register() {
     }
   };
 
+
+   const handleGoogleSignup = async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const firebaseUser = result.user;
+
+      // Send data to your backend (you must create this endpoint)
+      const data = await googleRegisterUser(firebaseUser.email, firebaseUser.displayName, firebaseUser.uid);
+      console.log("Google signup response:", data);
+
+      if (data.token) {
+        login(data.user, data.token, data.role);
+        navigate('/dashboard');
+      } else {
+        setError("Google signup failed on server.");
+      }
+    } catch (err) {
+      console.error("Google signup error", err);
+      setError("Google signup failed.");
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-950 p-4">
       <div className="flex w-full max-w-6xl bg-white rounded-lg shadow-md overflow-hidden">
@@ -45,11 +69,11 @@ export default function Register() {
         {/* Right Form */}
         <div className="w-full md:w-1/2 p-8">
           <h2 className="text-2xl font-semibold">Join us at</h2>
-          <h1 className="text-3xl font-bold text-purple-600 mb-6">LiveMeet</h1>
+          <h1 className="text-3xl font-bold text-purple-600 mb-6">LINK UP</h1>
 
           {/* Social Sign Up */}
           <div className="space-y-3">
-            <button className="flex items-center justify-center w-full py-3 bg-white border rounded-md shadow hover:shadow-md transition">
+            <button className="flex items-center justify-center w-full py-3 bg-white border rounded-md shadow hover:shadow-md transition" onClick={handleGoogleSignup}>
               <img src="https://img.icons8.com/color/16/000000/google-logo.png" className="mr-2" />
               Sign up with Google
             </button>

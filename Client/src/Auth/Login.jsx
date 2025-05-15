@@ -1,27 +1,26 @@
 import React, { useState } from 'react';
 import user from '../assets/LoginUser.png';
 import { useUser } from '../context/UserContext';
-import { loginUser } from '../utils/api';
-import { useNavigate } from 'react-router-dom'; // If you are using React Router
-
+import { loginUser, googleLoginUser } from '../utils/api';
+import { useNavigate } from 'react-router-dom';
+import { signInWithPopup } from 'firebase/auth';
+import { auth, provider } from '../firebase';
 
 export default function Login() {
-  const [showPassword, setShowPassword] = useState(false); // Add this to your component's state
+  const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { login } = useUser(); // Access the login function from context
+  const { login } = useUser();
   const [error, setError] = useState(null);
-  const navigate = useNavigate(); // Used for redirect after successful login
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
-    console.log(email, password)
     e.preventDefault();
     try {
       const data = await loginUser(email, password);
       if (data.token) {
-        // If login is successful, save user info in context and redirect
-        login(data.user, data.token , data.role);
-        navigate('/dashboard'); // Redirect to the dashboard or another page
+        login(data.user, data.token, data.role);
+        navigate('/dashboard');
       } else {
         setError('Invalid credentials');
       }
@@ -30,41 +29,56 @@ export default function Login() {
     }
   };
 
+  const handleGoogleLogin = async () => {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const firebaseUser = result.user;
+
+      const data = await googleLoginUser(firebaseUser.email, firebaseUser.displayName, firebaseUser.uid);
+      console.log("Google login response:", data);
+
+      if (data.token) {
+        login(data.user, data.token, data.role);
+        navigate('/dashboard');
+      } else {
+        setError("Google login failed on server.");
+      }
+    } catch (err) {
+      console.error("Google login error", err);
+      setError("Google login failed.");
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-950 p-4">
       <div className="flex w-full max-w-6xl bg-white rounded-lg shadow-md overflow-hidden">
-        {/* Left Illustration */}
+        {/* Left Side */}
         <div className="hidden md:flex items-center justify-center w-1/2 bg-[#1C1F2E] p-8">
           <img src={user} alt="Login Illustration" className="w-auto h-auto" />
         </div>
 
-        {/* Right Form */}
-        <div className="w-full md:w-1/2 p-8 ">
+        {/* Right Side */}
+        <div className="w-full md:w-1/2 p-8">
           <h2 className="text-2xl font-semibold">Welcome to</h2>
-          <h1 className="text-3xl font-bold text-purple-600 mb-6">LiveMeet</h1>
+          <h1 className="text-3xl font-bold text-purple-600 mb-6">LINK UP</h1>
 
-          {/* Social Login */}
           <div className="space-y-3">
-            <button className="flex items-center justify-center w-full py-3 bg-white border rounded-md shadow hover:shadow-md transition">
+            <button className="flex items-center justify-center w-full py-3 bg-white border rounded-md shadow hover:shadow-md transition" onClick={handleGoogleLogin}>
               <img src="https://img.icons8.com/color/16/000000/google-logo.png" className="mr-2" />
               Login with Google
             </button>
           </div>
 
-          {/* Divider */}
           <div className="my-6 flex items-center">
             <hr className="flex-grow border-gray-300" />
             <span className="px-3 text-gray-500">OR</span>
             <hr className="flex-grow border-gray-300" />
           </div>
 
-          {/* Email and Password */}
-          {error && <p className="error mb-2">{error}</p>}
+          {error && <p className="text-red-600 mb-2 text-sm">{error}</p>}
           <form className="space-y-4" onSubmit={handleLogin}>
             <div className="flex items-center bg-gray-200 rounded-md px-3 py-2">
-              <span className="text-gray-500 mr-2">
-                📧
-              </span>
+              <span className="text-gray-500 mr-2">📧</span>
               <input
                 type="email"
                 placeholder="example@gmail.com"
@@ -83,6 +97,7 @@ export default function Login() {
                 className="w-full bg-transparent outline-none"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                required
               />
               <span
                 className="text-gray-500 cursor-pointer ml-2"
@@ -108,7 +123,6 @@ export default function Login() {
             </button>
           </form>
 
-          {/* Register */}
           <p className="text-sm text-center mt-6">
             Don’t have an account?
             <a href="/register" className="text-purple-600 ml-1 hover:underline">Register</a>

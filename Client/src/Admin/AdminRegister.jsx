@@ -47,14 +47,6 @@ export default function AdminRegister() {
           <h2 className="text-2xl font-semibold">Join us at</h2>
           <h1 className="text-3xl font-bold text-purple-600 mb-6">LiveMeet</h1>
 
-          {/* Social Sign Up */}
-          <div className="space-y-3">
-            <button className="flex items-center justify-center w-full py-3 bg-white border rounded-md shadow hover:shadow-md transition">
-              <img src="https://img.icons8.com/color/16/000000/google-logo.png" className="mr-2" />
-              Sign up with Google
-            </button>
-          </div>
-
           {/* Divider */}
           <div className="my-6 flex items-center">
             <hr className="flex-grow border-gray-300" />

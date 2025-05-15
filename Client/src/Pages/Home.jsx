@@ -126,6 +126,24 @@ export default function Home() {
     navigate(`/room/${meetingId}`);
   };
 
+  const [dateTime, setDateTime] = useState(new Date());
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setDateTime(new Date());
+    }, 1000); // Update every second
+
+    return () => clearInterval(interval); // Cleanup on unmount
+  }, []);
+
+  const time = dateTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const date = dateTime.toLocaleDateString('en-US', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
+
 
   return (
     <div className="flex-1 p-4 md:p-6 bg-gray-950 min-h-screen">
@@ -149,8 +167,8 @@ export default function Home() {
             </div>
           )}
           <div>
-            <h2 className="text-4xl font-bold">12:04 PM</h2>
-            <p className="text-lg">Friday, 29 March 2024</p>
+            <h2 className="text-4xl font-bold">{time}</h2>
+            <p className="text-lg mt-1">{date}</p>
           </div>
         </motion.div>
 

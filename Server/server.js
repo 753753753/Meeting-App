@@ -10,6 +10,7 @@ const notesRoutes = require("./routes/notesRoutes");
 const PreviousmeetingRoutes = require("./routes/PreviousmeetingRoutes");
 const PersonalmeetingRoutes = require('./routes/PersonalmeetingRoutes')
 const AdminRoutes = require('./routes/AdminRoutes');
+
 // Load environment variables
 dotenv.config();
 
@@ -17,6 +18,13 @@ dotenv.config();
 connectDB();
 
 const app = express();
+
+// ✅ Fix for COOP/COEP issues with Firebase popups
+app.use((req, res, next) => {
+  res.removeHeader("Cross-Origin-Opener-Policy");
+  res.removeHeader("Cross-Origin-Embedder-Policy");
+  next();
+});
 
 // Middleware
 const allowedOrigins = ['http://localhost:5173']; // Your frontend URL
@@ -26,23 +34,23 @@ app.use(
     origin: allowedOrigins,
     credentials: true, // if you send cookies or use authentication
   })
-); // Enable CORS
-app.use(express.json()); // Parse JSON request bodies
+);
+app.use(express.json());
 
-// Health check route
+// Health check
 app.get("/", (req, res) => {
   res.send("API is running...");
 });
 
 // API Routes
-app.use("/api/auth", authRoutes); // Login/Register
-app.use("/api/Upcomingmeetings", UpcomingmeetingRoutes); // Create/Join meetings
-app.use("/api/notes", notesRoutes); // Meeting notes & transcripts
-app.use("/api/Previousmeetings" , PreviousmeetingRoutes )
-app.use('/api/Personalmeetings' , PersonalmeetingRoutes)
-app.use('/api/adminroutes' , AdminRoutes );
+app.use("/api/auth", authRoutes);
+app.use("/api/Upcomingmeetings", UpcomingmeetingRoutes);
+app.use("/api/notes", notesRoutes);
+app.use("/api/Previousmeetings", PreviousmeetingRoutes);
+app.use('/api/Personalmeetings', PersonalmeetingRoutes);
+app.use('/api/adminroutes', AdminRoutes);
 
-// Error handling middleware (optional but recommended)
+// Error handling
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ message: "Something went wrong!" });

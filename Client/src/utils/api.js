@@ -21,6 +21,21 @@ export const loginUser = async (email, password) => {
   return data; // Return the response for further processing (like saving JWT token)
 };
 
+// Google login
+export const googleLoginUser = async (email, name, uid) => {
+  const response = await fetch(`${API_URL}/auth/google-login`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email, name, uid }),
+  });
+
+  const data = await response.json();
+  return data;
+};
+
+
 // Function to handle user registration
 export const registerUser = async (name, email, password, role = "user") => {
   const response = await fetch(`${API_URL}/auth/register`, {
@@ -34,6 +49,21 @@ export const registerUser = async (name, email, password, role = "user") => {
   const data = await response.json();
   return data; // Return the response for further processing (like saving JWT token)
 };
+
+// Function to handle googleuser registration
+export const googleRegisterUser = async (email, name, uid, role = "user") => {
+  const res = await fetch(`${API_URL}/auth/google-register`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ email, name, uid , role }),
+  });
+
+  return await res.json();
+};
+
+
 
 // Function to handle Admin registration
 export const AdminregisterUser = async (
@@ -124,7 +154,12 @@ export const updateMeeting = async (meeting) => {
 };
 
 // Create Personal Meeting
-export const createPersonalMeeting = async (title, date, password ,participants = []) => {
+export const createPersonalMeeting = async (
+  title,
+  date,
+  password,
+  participants = []
+) => {
   const token = localStorage.getItem("authToken"); // Assuming JWT stored in localStorage
   console.log(token);
   const response = await fetch(`${API_URL}/Personalmeetings/create`, {
@@ -190,7 +225,6 @@ export const updatePersonalMeeting = async (meeting) => {
   if (!response.ok) throw new Error(data.message || "Update failed");
   return data.updatedMeeting;
 };
-
 
 // Move a meeting to "previous"
 export const endMeeting = async (id) => {

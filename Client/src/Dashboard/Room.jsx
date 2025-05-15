@@ -1,20 +1,24 @@
-import { ZegoUIKitPrebuilt } from '@zegocloud/zego-uikit-prebuilt';
+import { useSelector } from 'react-redux';
 import { useContext, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import { appId, serverSecret } from '../Config';
 import { SpeechContext } from '../context/SpeechContext';
-import { deletePersonalMeeting, endMeeting, saveMeetingData } from '../utils/api'; // <-- Import deletePersonalMeeting
+import { ZegoUIKitPrebuilt } from '@zegocloud/zego-uikit-prebuilt';
+import { appId, serverSecret } from '../Config';
+import { deletePersonalMeeting, endMeeting, saveMeetingData } from '../utils/api';
 import { recognition } from '../utils/speechRecognition';
+import { useDispatch } from 'react-redux';
+import { clearTranscript } from '../redux/slices/transcriptSlice';
 
 function Room() {
+  const dispatch = useDispatch();
   const { roomid } = useParams();
   const myMeeting = useRef(null);
-  const transcriptRef = useRef(""); // <-- Add this ref
-
-  const { transcript, setIsListening, setTranscript, isListening, withRecording } = useContext(SpeechContext);
+  const transcript = useSelector(state => state.transcript);
+  const transcriptRef = useRef("");
+  const { isListening, setIsListening, withRecording } = useContext(SpeechContext);
 
   useEffect(() => {
-    transcriptRef.current = transcript; // <-- Always keep it updated
+    transcriptRef.current = transcript; // keep latest transcript in ref
   }, [transcript]);
 
   useEffect(() => {
@@ -52,12 +56,10 @@ function Room() {
       showUserList: true,
       layout: 'Gallery',
       onLeaveRoom: async () => {
-        console.log("before", transcriptRef.current); // <-- Use ref here
+        console.log("Final Transcript:", transcriptRef.current);
 
         if (withRecording) {
           await endMeeting(roomid);
-          console.log("Final Transcript:", transcriptRef.current);
-
           alert('Meeting saved to Previous Meetings And Notes Available in a few seconds...😄');
           window.location.href = '/dashboard';
 
@@ -66,13 +68,13 @@ function Room() {
 
           if (isListening) {
             recognition.stop();
-            console.log("Speech recognition stopped");
             setIsListening(false);
+            console.log("Speech recognition stopped");
           }
 
-          setTranscript("");
+          // clear transcript on end
+          dispatch(clearTranscript());
 
-          // Delete the meeting after saving it
           await deletePersonalMeeting(roomid);
           console.log(`Meeting with ID ${roomid} has been deleted.`);
         } else {
@@ -80,7 +82,6 @@ function Room() {
           alert('Meeting saved to Previous Meetings...😄');
           window.location.href = '/dashboard';
 
-          // Delete the meeting after saving it
           await deletePersonalMeeting(roomid);
           console.log(`Meeting with ID ${roomid} has been deleted.`);
         }

@@ -30,19 +30,30 @@ function PersonalRoom() {
   }, []);
 
   const handleDelete = async (meetingId) => {
-    try {
-      await deletePersonalMeeting(meetingId);
-      setMeetings(prevMeetings => prevMeetings.filter(meeting => meeting._id !== meetingId));
-    } catch (error) {
-      console.error('Failed to delete meeting:', error);
+    if (role === 'admin') {
+      try {
+        await deletePersonalMeeting(meetingId);
+        setMeetings(prevMeetings => prevMeetings.filter(meeting => meeting._id !== meetingId));
+      } catch (error) {
+        console.error('Failed to delete meeting:', error);
+      }
+    }
+    else {
+      alert("Oops! This feature is only available to admins.");
     }
   };
 
   const handleCopyInvitation = (roomid) => {
-    const inviteURL = `${window.location.origin}/room/${roomid}`;
-    navigator.clipboard.writeText(inviteURL)
-      .then(() => alert("Invitation link copied to clipboard!"))
-      .catch((err) => console.error('Failed to copy:', err));
+    if (role === 'admin') {
+      const inviteURL = `${window.location.origin}/room/${roomid}`;
+      navigator.clipboard.writeText(inviteURL)
+        .then(() => alert("Invitation link copied to clipboard!"))
+        .catch((err) => console.error('Failed to copy:', err));
+    }
+    else {
+      alert("Oops! This feature is only available to admins.");
+    }
+
   };
 
   return (
@@ -95,15 +106,20 @@ function PersonalRoom() {
               </div>
 
               <div className="flex flex-col sm:flex-row sm:items-start">
-                <span className="w-32 font-medium text-gray-300 mt-1">Invite Link:</span>
-                <a
-                  href={`${window.location.origin}/room/${meeting._id}`}
-                  className="text-blue-400 break-words hover:underline mt-1 sm:mt-0"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {`${window.location.origin}/room/${meeting._id}`}
-                </a>
+                {role === 'admin' && (
+                  <div>
+                    <span className="w-32 font-medium text-gray-300 mt-1">Invite Link:</span>
+                    <a
+                      href={`${window.location.origin}/room/${meeting._id}`}
+                      className="text-blue-400 break-words hover:underline mt-1 sm:mt-0"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {`${window.location.origin}/room/${meeting._id}`}
+                    </a>
+                  </div>
+
+                )}
               </div>
             </div>
 
@@ -113,18 +129,25 @@ function PersonalRoom() {
               }>
                 Start the meeting
               </button>
-              <button
-                className="bg-[#252A41] hover:bg-[#2E334E] text-white px-4 py-2 rounded text-sm w-full sm:w-auto cursor-pointer"
-                onClick={() => handleCopyInvitation(meeting._id)}
-              >
-                Copy Invitation
-              </button>
-              <button
-                className="bg-[#252A41] hover:bg-[#2E334E] text-white px-4 py-2 rounded text-sm w-full sm:w-auto cursor-pointer"
-                onClick={() => handleDelete(meeting._id)}
-              >
-                Delete
-              </button>
+              {role === 'admin' && (
+                <button
+                  className="bg-[#252A41] hover:bg-[#2E334E] text-white px-4 py-2 rounded text-sm w-full sm:w-auto cursor-pointer"
+                  onClick={() => handleCopyInvitation(meeting._id)}
+                >
+                  Copy Invitation
+                </button>
+
+              )}
+              {role === 'admin' && (
+
+                <button
+                  className="bg-[#252A41] hover:bg-[#2E334E] text-white px-4 py-2 rounded text-sm w-full sm:w-auto cursor-pointer"
+                  onClick={() => handleDelete(meeting._id)}
+                >
+                  Delete
+                </button>
+              )}
+
             </div>
           </div>
         ))

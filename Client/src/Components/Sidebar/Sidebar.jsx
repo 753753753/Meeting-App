@@ -29,7 +29,7 @@ export default function Sidebar({ isOpen, onClose }) {
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center">
             <img src={logo} alt="LinkUp Logo" className="w-10 h-10 mr-2" />
-            <h1 className="text-2xl font-bold">LiveMeet</h1>
+            <h1 className="text-2xl font-bold">LINK UP</h1>
           </div>
           {/* Close button on mobile */}
           <button className="md:hidden" onClick={onClose}>

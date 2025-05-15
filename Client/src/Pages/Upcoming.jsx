@@ -11,6 +11,10 @@ import { SpeechContext } from '../context/SpeechContext';
 import { useNavigate } from 'react-router-dom';
 import StartMeetingModal from '../Components/Modal/StartMeetingModal';
 import { useUser } from '../context/UserContext'; // adjust path as needed
+import { useDispatch } from 'react-redux';
+import { appendTranscript, clearTranscript } from '../redux/slices/transcriptSlice';
+
+
 const Upcoming = () => {
   const navigate = useNavigate();
   const [meetings, setMeetings] = useState([]);
@@ -18,8 +22,8 @@ const Upcoming = () => {
   const [selectedMeeting, setSelectedMeeting] = useState(null);
   const [isStartModalOpen, setIsStartModalOpen] = useState(false);
   const [meetingToStart, setMeetingToStart] = useState(null);
-  const { withRecording, setWithRecording } = useContext(SpeechContext);
   const { role } = useUser(); // Destructure role from context
+
   useEffect(() => {
     const fetchMeetings = async () => {
       try {
@@ -61,7 +65,9 @@ const Upcoming = () => {
   };
 
   // Speech recognition logic
-  const { setTranscript, setIsListening } = useContext(SpeechContext);
+  const { setIsListening, setWithRecording } = useContext(SpeechContext);
+  const dispatch = useDispatch();
+
   const handleStart = (meetingId, withRecording = false) => {
     const recognition = new window.webkitSpeechRecognition();
     recognition.continuous = true;
@@ -69,27 +75,19 @@ const Upcoming = () => {
     recognition.lang = 'en-US';
 
     recognition.onresult = (event) => {
-      let currentTranscript = "";
+      let currentTranscript = '';
       for (let i = event.resultIndex; i < event.results.length; i++) {
         currentTranscript += event.results[i][0].transcript;
       }
-
-      setTranscript(prevTranscript => {
-        if (prevTranscript !== currentTranscript) {
-          return currentTranscript;
-        }
-        return prevTranscript;
-      });
-
-      console.log("Live transcript:", currentTranscript);
+      dispatch(appendTranscript(currentTranscript));
+      console.log('Live transcript:', currentTranscript);
     };
 
-    setTranscript("");
+    dispatch(clearTranscript()); // Clear only once at start
     setIsListening(true);
 
     if (withRecording) {
-      // Trigger your recording logic here
-      console.log("Recording started...");
+      console.log('Recording started...');
       setWithRecording(true);
     }
 
@@ -124,7 +122,7 @@ const Upcoming = () => {
                 </button>
                 <button
                   className="text-white hover:text-red-400 cursor-pointer"
-                  onClick={() => handleDelete(meeting._id)} style={{ display: role === 'admin' ? 'block' : 'none' }} 
+                  onClick={() => handleDelete(meeting._id)} style={{ display: role === 'admin' ? 'block' : 'none' }}
                 >
                   <FaTrashAlt />
                 </button>
