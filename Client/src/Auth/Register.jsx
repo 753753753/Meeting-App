@@ -39,7 +39,7 @@ export default function Register() {
       const firebaseUser = result.user;
 
       // Send data to your backend (you must create this endpoint)
-      const data = await googleRegisterUser(firebaseUser.email, firebaseUser.displayName, firebaseUser.uid);
+      const data = await googleRegisterUser(firebaseUser.email, firebaseUser.displayName, firebaseUser.uid , firebaseUser.photoURL);
       console.log("Google signup response:", data);
 
       if (data.token) {

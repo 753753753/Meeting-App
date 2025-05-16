@@ -22,13 +22,13 @@ export const loginUser = async (email, password) => {
 };
 
 // Google login
-export const googleLoginUser = async (email, name, uid) => {
+export const googleLoginUser = async (email, name, uid , image) => {
   const response = await fetch(`${API_URL}/auth/google-login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ email, name, uid }),
+    body: JSON.stringify({ email, name, uid , image}),
   });
 
   const data = await response.json();
@@ -51,14 +51,14 @@ export const registerUser = async (name, email, password, role = "user") => {
 };
 
 // Function to handle googleuser registration
-export const googleRegisterUser = async (email, name, uid, role = "user") => {
+export const googleRegisterUser = async (email, name, uid, role = "user" , image) => {
   const res = await fetch(`${API_URL}/auth/google-register`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ email, name, uid , role }),
-  });
+    body: JSON.stringify({ email, name, uid , role , image }),
+});
 
   return await res.json();
 };

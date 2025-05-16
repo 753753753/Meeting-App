@@ -20,7 +20,6 @@ const MainLayout = ({ children }) => {
         <main className="mt-14 overflow-y-auto h-[calc(100vh-3.5rem)] custom-scrollbar bg-gray-950 text-white">
           {children}
         </main>
-
       </div>
     </div>
   );

@@ -33,8 +33,9 @@ export default function Login() {
     try {
       const result = await signInWithPopup(auth, provider);
       const firebaseUser = result.user;
+      console.log(result)
 
-      const data = await googleLoginUser(firebaseUser.email, firebaseUser.displayName, firebaseUser.uid);
+      const data = await googleLoginUser(firebaseUser.email, firebaseUser.displayName, firebaseUser.uid , firebaseUser.photoURL);
       console.log("Google login response:", data);
 
       if (data.token) {

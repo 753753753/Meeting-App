@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createMeeting, getMeetings } from '../../utils/api'; // Adjust path if needed
+import loader from "../../assets/loader.svg"
+import { toast } from 'react-toastify';
 
 export default function MeetingModal({ activeModal, setActiveModal }) {
   if (!activeModal) return null;
@@ -36,7 +38,8 @@ export default function MeetingModal({ activeModal, setActiveModal }) {
   const [scheduleParticipants, setScheduleParticipants] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-
+  const [loading , setloading] = useState(false)
+  
   const handleScheduleMeeting = async (e) => {
     e.preventDefault();
 
@@ -50,9 +53,12 @@ export default function MeetingModal({ activeModal, setActiveModal }) {
         ? scheduleParticipants.split(',').map((p) => p.trim())
         : [];
       console.log(scheduleDate, scheduleParticipants, scheduleTitle)
-      const response = await createMeeting(scheduleTitle, scheduleDate, participantsArray);
+      setloading(true)
+      const response = await createMeeting(scheduleTitle, scheduleDate, participantsArray); 
+      setloading(false)
       if (response.meeting) {
         setSuccess('Meeting scheduled successfully!');
+       toast.success("✅ Done! Invites sent.");
         setTimeout(() => {
           setSuccess('');
           setActiveModal(null); // close modal
@@ -125,6 +131,11 @@ export default function MeetingModal({ activeModal, setActiveModal }) {
         {/* Schedule Meeting */}
         {activeModal === 'schedule' && (
           <form className="space-y-4 text-center" onSubmit={handleScheduleMeeting}>
+            <div className='flex justify-center'>
+               {loading === true && (
+                 <img src= {loader} alt="" />
+             )}
+            </div>
             {error && <p className="text-red-400">{error}</p>}
             {success && <p className="text-green-400">{success}</p>}
 

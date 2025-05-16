@@ -3,7 +3,7 @@ import { GoogleGenAI } from "@google/genai";
 const ai = new GoogleGenAI({ apiKey: process.env.GEMNI_AI_KEY });
 
 // Function to generate AI summary
-export async function getAIUpdatedNotes(transcript, meetingTitle) {
+export async function getAIUpdatedNotes(transcript) {
   try {
     console.log("AI started");
     const response = await ai.models.generateContent({
@@ -14,10 +14,10 @@ You are an expert meeting assistant, translator, and educator.
 Your job is to convert the following multi-language, partially broken meeting transcript into clean, high-quality meeting notes in English.
 
 ### Requirements:
-- Fill in missing or unclear parts using best inference based on the meeting context and title: **"${meetingTitle}"**.
+- Fill in missing or unclear parts using best inference based on the meeting context and title: .
 - Translate any non-English content (e.g., Hindi) into **clear, fluent English**.
 - Add helpful context or missing details related to the meeting title to improve clarity.
-- Provide simple definitions or context for technical terms (e.g., Web Development, React, Firebase).
+- Provide simple definitions or context for technical terms.
 - Format under these exact sections:
 
   1. 📚 **Main Topics Discussed**

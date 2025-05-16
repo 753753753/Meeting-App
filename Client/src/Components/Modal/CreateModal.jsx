@@ -86,16 +86,8 @@ const CreateModal = ({ onClose, setActiveModal }) => {
           />
 
           <input
-            type="text"
-            placeholder="Participants (comma-separated emails)"
-            value={scheduleParticipants}
-            onChange={(e) => setScheduleParticipants(e.target.value)}
-            className="w-full bg-[#2E3450] text-white placeholder-gray-400 px-4 py-2 rounded-md"
-          />
-
-          <input
             type="password"
-            placeholder="Meeting Password (optional)"
+            placeholder="Meeting Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="w-full bg-[#2E3450] text-white placeholder-gray-400 px-4 py-2 rounded-md"

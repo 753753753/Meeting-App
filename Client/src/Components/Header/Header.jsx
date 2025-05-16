@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { FaBars } from 'react-icons/fa';
-import profile from '../../assets/avatar.png';
+import profile from '../../assets/profile.png';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../context/UserContext'; // ✅ Import the context hook
 
@@ -8,8 +8,8 @@ const Header = ({ toggleSidebar }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
-  const { logout, role } = useUser(); // ✅ Use context
-
+  const { logout, role, user } = useUser(); // ✅ Use context
+  console.log(user?.image)
   const handleLogout = () => {
     logout(); // ✅ Use centralized logout function
     navigate('/login');
@@ -34,10 +34,12 @@ const Header = ({ toggleSidebar }) => {
 
       <div className="relative ml-auto" ref={dropdownRef}>
         <img
-          src={profile}
-          alt="Profile"
-          onClick={() => setDropdownOpen(!dropdownOpen)}
-          className="w-8 h-8 rounded-full object-cover border-2 border-white cursor-pointer"
+        src= {user?.image ? user?.image : profile}
+        alt="Profile"
+        referrerPolicy="no-referrer"
+        onClick={() => setDropdownOpen(!dropdownOpen)}
+        className="w-8 h-8 rounded-full object-cover border-2 border-white cursor-pointer"
+
         />
 
         {dropdownOpen && (

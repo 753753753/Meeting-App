@@ -66,12 +66,21 @@ exports.loginUser = async (req, res) => {
 };
 
 exports.googlelogin = async (req, res) => {
-  const { email, name, uid } = req.body;
+  const { email, name, uid, image } = req.body;
+
   let user = await User.findOne({ email });
+  console.log("image", image);
 
   if (!user) {
-    user = new User({ email, name, googleId: uid });
+    // Create new user if not found
+    user = new User({ email, name, googleId: uid, image });
     await user.save();
+  } else {
+    // Update image if not already set
+    if (!user.image && image) {
+      user.image = image;
+      await user.save();
+    }
   }
 
   const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: "1h" });
@@ -81,13 +90,18 @@ exports.googlelogin = async (req, res) => {
     message: "Login successful",
     token,
     role: user.role,
-    user: { id: user._id, name: user.name, email: user.email },
+    user: {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      image: user.image,
+    },
   });
 };
 
 exports.googleRegisterUser = async (req, res) => {
   try {
-    const { name, email, uid , role} = req.body;
+    const { name, email, uid , role , image} = req.body;
 
     if (!name || !email || !uid) {
       return res.status(400).json({ message: 'Missing required fields' });
@@ -103,6 +117,7 @@ exports.googleRegisterUser = async (req, res) => {
         email,
         role,
         googleId: uid, // store Firebase UID or Google UID
+        image
       });
 
       await user.save();
@@ -121,6 +136,7 @@ exports.googleRegisterUser = async (req, res) => {
         id: user._id,
         name: user.name,
         email: user.email,
+        image: user.image
       },
     });
   } catch (error) {

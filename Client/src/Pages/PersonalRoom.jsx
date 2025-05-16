@@ -4,6 +4,7 @@ import CreateModal from '../Components/Modal/CreateModal';
 import PasswordModal from '../Components/Modal/PasswordModal';
 import { useUser } from '../context/UserContext'; // adjust path as needed
 import { deletePersonalMeeting, getPersonalMeetings } from '../utils/api';
+
 function PersonalRoom() {
   const [showModal, setShowModal] = useState(false);
   const [meetings, setMeetings] = useState([]);
@@ -59,11 +60,15 @@ function PersonalRoom() {
   return (
     <div className="flex-1 bg-gray-950 min-h-screen p-4 sm:p-6 md:p-10">
       {meetings.length === 0 ? (
-        <div className="flex justify-center items-center h-96 text-center">
-          <div className="bg-[#1C1F2E] p-6 rounded-lg shadow-xl text-white">
-            <h4 className="text-xl font-semibold mb-4">No Meetings Found</h4>
-            <p className="text-gray-400">Looks like you don't have any upcoming meetings. Please schedule one!</p>
-          </div>
+        <div>
+          {role !== 'admin' && (
+            <div className="flex justify-center items-center h-96 text-center">
+              <div className="bg-[#1C1F2E] p-6 rounded-lg shadow-xl text-white">
+                <h4 className="text-xl font-semibold mb-4">No Meetings Found</h4>
+                <p className="text-gray-400">Looks like you don't have any Personal meetings....</p>
+              </div>
+            </div>
+          )}
         </div>
       ) : (
         meetings.map((meeting) => (
