@@ -1,6 +1,6 @@
 // src/context/UserContext.js
 import React, { createContext, useState, useContext, useEffect } from 'react';
-
+import {getTeamMembers } from "../utils/api"
 const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
@@ -24,20 +24,10 @@ export const UserProvider = ({ children }) => {
   // ✅ Fetch team members from backend
   const fetchTeamMembers = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/adminroutes/team', {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
-
-      const data = await response.json();
-      if (!data.error) {
-        setTeamMembers(data); // set fetched members
-      }
+      const data = await getTeamMembers(token);
+      setTeamMembers(data);
     } catch (error) {
-      console.error('Failed to fetch team members:', error);
+      console.error('Failed to fetch team members:', error.message);
     }
   };
 

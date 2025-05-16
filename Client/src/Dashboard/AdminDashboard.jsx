@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from '../context/UserContext';
-
+import {addUser , removeUser} from '../utils/api'
 const AdminDashboard = () => {
   const {
     user,
@@ -21,56 +21,32 @@ const AdminDashboard = () => {
     }
   }, [role, token]);
 
- const handleAddUser = () => {
-  if (!email) {
-    setError('Please enter an email.');
-    return;
-  }
+  const handleAddUser = async () => {
+    if (!email) {
+      setError('Please enter an email.');
+      return;
+    }
 
-  fetch('http://localhost:5000/api/adminroutes/add', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ email }),
-  })
-    .then(response => response.json())
-    .then(data => {
-      if (data.error) {
-        setError(data.error);
-      } else {
-        setSuccessMessage('User added successfully!');
-        setEmail('');
-        setError(null);
-        // Ensure prevMembers is an array before appending
-        setTeamMembers(prevMembers => Array.isArray(prevMembers) ? [...prevMembers, data] : [data]);
-      }
-    })
-    .catch(() => setError('Failed to add user.'));
-};
-
-  const handleRemoveUser = (userId) => {
-    fetch('http://localhost:5000/api/adminroutes/remove', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ userId }),
-    })
-      .then(response => response.json())
-      .then(data => {
-        if (data.error) {
-          setError(data.error);
-        } else {
-          setSuccessMessage('User removed successfully!');
-          setTeamMembers(prevMembers => prevMembers.filter(member => member._id !== userId));
-        }
-      })
-      .catch(() => setError('Failed to remove user.'));
+    try {
+      const data = await addUser(email, token);
+      setSuccessMessage('User added successfully!');
+      setEmail('');
+      setError(null);
+      setTeamMembers(prev => Array.isArray(prev) ? [...prev, data] : [data]);
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
+  const handleRemoveUser = async (userId) => {
+    try {
+      await removeUser(userId, token);
+      setSuccessMessage('User removed successfully!');
+      setTeamMembers(prev => prev.filter(member => member._id !== userId));
+    } catch (err) {
+      setError(err.message);
+    }
+  };
   return (
     <div className="min-h-screen bg-gray-950 text-white flex items-center justify-center px-4">
       <div className="w-full max-w-3xl bg-gray-900 p-8 rounded-2xl shadow-xl space-y-6">
