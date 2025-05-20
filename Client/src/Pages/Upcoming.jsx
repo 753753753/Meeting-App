@@ -47,15 +47,10 @@ const Upcoming = () => {
   };
 
   const handleCopyInvitation = (roomid) => {
-    if (role === 'admin') {
       const inviteURL = `${window.location.origin}/room/${roomid}`;
       navigator.clipboard.writeText(inviteURL)
         .then(() => alert("Invitation link copied to clipboard!"))
         .catch((err) => console.error('Failed to copy:', err));
-    }
-    else {
-      alert("Oops! This feature is only available to admins.");
-    }
   };
 
   const handleSave = async () => {

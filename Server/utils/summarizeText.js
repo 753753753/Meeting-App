@@ -4,6 +4,7 @@ const ai = new GoogleGenAI({ apiKey: process.env.GEMNI_AI_KEY });
 
 // Function to generate AI summary
 export async function getAIUpdatedNotes(transcript) {
+  console.log(transcript)
   try {
     console.log("AI started");
     const response = await ai.models.generateContent({
@@ -32,7 +33,7 @@ Your job is to convert the following multi-language, partially broken meeting tr
 Avoid greetings, disclaimers, or unnecessary text.
 
 ### Transcript:
-${transcript}
+${transcript.content}
       `,
     });
     return response.text;

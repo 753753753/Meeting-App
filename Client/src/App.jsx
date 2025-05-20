@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import MainLayout from './layouts/MainLayout';
 import Home from './Pages/Home';
-import Upcoming from './pages/Upcoming';
+import Upcoming from "./Pages/Upcoming.jsx"
 import Previous from './Pages/Previous';
 import Recordings from './Pages/Recordings';
 import PersonalRoom from './Pages/PersonalRoom';
