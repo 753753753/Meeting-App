@@ -21,7 +21,7 @@ export default function Login() {
         login(data.user, data.token, data.role);
         navigate('/dashboard');
       } else {
-        setError('Invalid credentials');
+         setError(data.message || 'Invalid credentials');
       }
     } catch (err) {
       setError('Something went wrong. Please try again!');
