@@ -1,8 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { FaBars } from 'react-icons/fa';
-import profile from '../../assets/profile.png';
+import { useEffect, useRef, useState } from 'react';
+import { CgProfile } from "react-icons/cg";
+import { FaBars, FaSignOutAlt, FaUser } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import profile from '../../assets/profile.png';
 import { useUser } from '../../context/UserContext'; // ✅ Import the context hook
+import { BiChevronDown } from 'react-icons/bi'; // arrow icon
+
 
 const Header = ({ toggleSidebar }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -14,7 +17,10 @@ const Header = ({ toggleSidebar }) => {
     logout(); // ✅ Use centralized logout function
     navigate('/login');
   };
-
+  const handleprofile = () => {
+    navigate('/proflie');
+    setDropdownOpen(false);
+  }
   // Close dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -33,29 +39,48 @@ const Header = ({ toggleSidebar }) => {
       </button>
 
       <div className="relative ml-auto" ref={dropdownRef}>
-        <img
-        src= {user?.image ? user?.image : profile}
-        alt="Profile"
-        referrerPolicy="no-referrer"
-        onClick={() => setDropdownOpen(!dropdownOpen)}
-        className="w-8 h-8 rounded-full object-cover border-2 border-white cursor-pointer"
+        {/* Profile Image with arrow */}
+        <div className="relative w-8 h-8">
+          <img
+            src={user?.image ? user?.image : profile}
+            alt="Profile"
+            referrerPolicy="no-referrer"
+            onClick={() => setDropdownOpen(!dropdownOpen)}
+            className="w-8 h-8 rounded-full object-cover border-2 border-white cursor-pointer"
+          />
 
-        />
+          {/* Small dropdown arrow with background */}
+          <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-white/60 rounded-full flex items-center justify-center pointer-events-none">
+            <BiChevronDown className="text-black w-4 h-4" />
+          </div>
+        </div>
 
+        {/* Dropdown */}
         {dropdownOpen && (
-          <div className="absolute right-0 mt-2 w-44 bg-[#1C1F2E] text-white rounded-lg shadow-lg py-2 z-50">
+          <div className="absolute right-0 mt-2 w-48 bg-[#1C1F2E] text-white rounded-xl shadow-xl z-50 overflow-hidden border border-gray-600 cursor-pointer">
+            {/* Profile Section */}
+            <div className="flex items-center w-full px-4 py-2 border-b border-gray-700 hover:bg-gray-800 transition-colors duration-200 cursor-pointer" onClick={handleprofile}>
+              <CgProfile className="mr-2 text-lg" />
+              Profile
+            </div>
+
+            {/* Logout */}
             <button
-              className="w-full text-left px-4 py-2 hover:bg-gray-800 cursor-pointer"
               onClick={handleLogout}
+              className="flex items-center w-full px-4 py-2 border-b border-gray-700 hover:bg-gray-800 transition-colors duration-200 cursor-pointer"
             >
+              <FaSignOutAlt className="mr-2" />
               Logout
             </button>
+
+            {/* Admin Option */}
             {role === 'admin' && (
               <button
-                className="w-full text-left px-4 py-2 hover:bg-gray-800 cursor-pointer"
+                className="flex items-center w-full px-4 py-2 hover:bg-gray-800 transition-colors duration-200 cursor-pointer"
                 onClick={() => navigate('/admindashboard')}
               >
-                ManageUser
+                <FaUser className="mr-2 text-blue-400" />
+                Manage User
               </button>
             )}
           </div>

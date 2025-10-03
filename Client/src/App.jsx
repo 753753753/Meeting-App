@@ -17,7 +17,7 @@ import ErrorBoundary from "./ErrorBoundary.jsx" // Import the ErrorBoundary comp
 import AdminRegister from './Admin/AdminRegister.jsx';
 import AdminDashboard from './Dashboard/AdminDashboard.jsx';
 import ChatUs from './Pages/ChatUs.jsx';
-
+import Profile from './Components/Profile/Profile.jsx'
 const App = () => {
   const DefaultRedirect = () => {
     const { user } = useUser(); // Access the login function from context
@@ -92,6 +92,16 @@ const App = () => {
                 <PrivateRoute>
                   <MainLayout>
                     <ChatUs />
+                  </MainLayout>
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/proflie"
+              element={
+                <PrivateRoute>
+                  <MainLayout>
+                    <Profile />
                   </MainLayout>
                 </PrivateRoute>
               }

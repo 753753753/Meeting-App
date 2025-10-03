@@ -30,7 +30,7 @@ exports.registerUser = async (req, res) => {
       message: "User registered successfully",
       token,
       role,
-      user: { id: newUser._id, name: newUser.name, email: newUser.email },
+      user: { id: newUser._id, name: newUser.name, email: newUser.email , teamLeader: user.teamLeader},
     });
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
@@ -58,10 +58,15 @@ exports.loginUser = async (req, res) => {
       message: "Login successful",
       token,
       role: user.role,
-      user: { id: user._id, name: user.name, email: user.email },
+      user: { id: user._id, name: user.name, email: user.email , teamLeader: user.teamLeader},
     });
   } catch (error) {
-    res.status(500).json({ message: "Server error", error });
+     console.error("Login error:", err);
+    res.status(500).json({ 
+      message: "Server error", 
+      error: err.message,     // 👈 add this
+      stack: err.stack        // 👈 optional, helps debug
+    });
   }
 };
 
@@ -95,6 +100,7 @@ exports.googlelogin = async (req, res) => {
       name: user.name,
       email: user.email,
       image: user.image,
+      teamLeader: user.teamLeader
     },
   });
 };
@@ -136,7 +142,8 @@ exports.googleRegisterUser = async (req, res) => {
         id: user._id,
         name: user.name,
         email: user.email,
-        image: user.image
+        image: user.image,
+        teamLeader: user.teamLeader
       },
     });
   } catch (error) {
