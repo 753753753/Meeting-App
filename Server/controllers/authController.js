@@ -62,11 +62,11 @@ exports.loginUser = async (req, res) => {
     });
   } catch (error) {
      console.error("Login error:", err);
-    res.status(500).json({ 
-      message: "Server error", 
-      error: err.message,     // 👈 add this
-      stack: err.stack        // 👈 optional, helps debug
-    });
+     res.status(500).json({ 
+    message: "Server error", 
+    error: error.message,   // ✅ correct usage
+    stack: error.stack      // ✅ optional, remove in production
+  });
   }
 };
 
