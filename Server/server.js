@@ -30,7 +30,7 @@ app.use((req, res, next) => {
 const allowedOrigins = [
   'http://localhost:5173', // for local dev
   'https://meeting-app-client.onrender.com' // live frontend
-];L
+];
 
 app.use(
   cors({
