@@ -1,4 +1,5 @@
 import { FaHome, FaCalendarAlt, FaClock, FaVideo, FaUser, FaTimes } from 'react-icons/fa';
+import { RiChatSmile3Fill } from "react-icons/ri";
 import { Link, useLocation } from 'react-router-dom';
 import logo from '../../assets/logo (2).png';
 
@@ -8,6 +9,7 @@ const navItems = [
   { label: 'Previous', icon: <FaClock />, path: '/previous' },
   { label: 'Recordings', icon: <FaVideo />, path: '/recordings' },
   { label: 'Personal Room', icon: <FaUser />, path: '/room' },
+  { label: 'Chat Us', icon: <RiChatSmile3Fill  />, path: '/chat' },
 ];
 
 export default function Sidebar({ isOpen, onClose }) {

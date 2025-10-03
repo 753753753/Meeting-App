@@ -27,7 +27,7 @@ export default function Home() {
   const [meetingToStart, setMeetingToStart] = useState(null);
   const { setWithRecording } = useContext(SpeechContext);
   const { role } = useUser(); // Destructure role from context
-  console.log(role)
+
   const actions = [
     { label: 'New Meeting', text: "Start an instant meeting", color: 'bg-orange-500', icon: <MdAdd size={24} /> },
     { label: 'Join Meeting', text: "Via invitation link", color: 'bg-blue-500', icon: <MdVideoCall size={24} /> },

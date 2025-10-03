@@ -353,3 +353,38 @@ export async function downloadNoteById(id) {
   }
   return await response.blob();
 }
+
+// Send a message to the group
+export async function sendGroupMessage(content) {
+   console.log("sending message");
+  const response = await fetch(`${API_URL}/groupChat/sendGroupMessage`, {
+    method: "POST",
+    headers: {
+      ...getAuthHeaders(),
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ content })
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to send group message");
+  }
+
+  return await response.json();
+}
+
+// Get all messages from the group
+export async function getGroupMessages() {
+  const response = await fetch(`${API_URL}/groupChat/getGroupMessages`, {
+    method: "GET",
+    headers: getAuthHeaders()
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch group messages");
+  }
+
+  return await response.json();
+}
+
+

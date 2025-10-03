@@ -16,6 +16,7 @@ import { SpeechProvider } from './context/SpeechContext';
 import ErrorBoundary from "./ErrorBoundary.jsx" // Import the ErrorBoundary component
 import AdminRegister from './Admin/AdminRegister.jsx';
 import AdminDashboard from './Dashboard/AdminDashboard.jsx';
+import ChatUs from './Pages/ChatUs.jsx';
 
 const App = () => {
   const DefaultRedirect = () => {
@@ -81,6 +82,16 @@ const App = () => {
                 <PrivateRoute>
                   <MainLayout>
                     <PersonalRoom />
+                  </MainLayout>
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/chat"
+              element={
+                <PrivateRoute>
+                  <MainLayout>
+                    <ChatUs />
                   </MainLayout>
                 </PrivateRoute>
               }
