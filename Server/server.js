@@ -27,12 +27,22 @@ app.use((req, res, next) => {
 });
 
 // Middleware
-const allowedOrigins = ['http://localhost:5173']; // Your frontend URL
+const allowedOrigins = [
+  'http://localhost:5173', // for local dev
+  'https://meeting-app-client.onrender.com' // live frontend
+];L
 
 app.use(
   cors({
-    origin: allowedOrigins,
-    credentials: true, // if you send cookies or use authentication
+    origin: function (origin, callback) {
+      // allow requests with no origin (like Postman) or from allowed origins
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true, // needed if sending cookies or auth
   })
 );
 app.use(express.json());
