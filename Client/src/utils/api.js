@@ -1,6 +1,6 @@
 // src/utils/api.js
-// const API_URL = "http://localhost:5000/api"; // Update with your backend URL
-const API_URL = "https://meeting-app-server-fph4.onrender.com/api"; // Update with your backend URL
+const API_URL = "http://localhost:5000/api"; // Update with your backend URL
+// const API_URL = "https://meeting-app-server-fph4.onrender.com/api"; // Update with your backend URL
 
 // Helper to get the auth token from localStorage
 function getAuthHeaders() {
@@ -389,3 +389,126 @@ export async function getGroupMessages() {
 }
 
 
+// ================== Admin User Management APIs ==================
+
+// Add user to team
+export async function addUserToTeam(email) {
+  const response = await fetch(`${API_URL}/adminroutes/add`, {
+    method: "POST",
+    headers: {
+      ...getAuthHeaders(),
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to add user");
+  }
+
+  return await response.json();
+}
+
+// Remove user from team
+export async function removeUserFromTeam(userId) {
+  const response = await fetch(`${API_URL}/adminroutes/remove`, {
+    method: "POST",
+    headers: {
+      ...getAuthHeaders(),
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ userId }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to remove user");
+  }
+
+  return await response.json();
+}
+
+// Fetch team members
+export async function fetchTeamMembers() {
+  const response = await fetch(`${API_URL}/adminroutes/team`, {
+    method: "GET",
+    headers: {
+      ...getAuthHeaders(),
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch team members");
+  }
+
+  return await response.json();
+}
+
+
+// Fetch team leader
+export async function fetchTeamLeader() {
+  const response = await fetch(`${API_URL}/adminroutes/teamleader`, {
+    method: "GET",
+    headers: {
+      ...getAuthHeaders(),
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch team members");
+  }
+
+  return await response.json();
+}
+
+
+// Send a chat message
+export async function sendMessageAPI(senderId, receiverId, content) {
+  const response = await fetch(`${API_URL}/teamchats/send`, {
+    method: "POST",
+    headers: {
+      ...getAuthHeaders(),
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ senderId, receiverId, content }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to send message");
+  }
+
+  return await response.json();
+}
+
+// Fetch messages between user and selected member
+export async function fetchMessagesAPI(userId, memberId) {
+  const response = await fetch(`${API_URL}/teamchats/${userId}/${memberId}`, {
+    method: "GET",
+    headers: {
+      ...getAuthHeaders(),
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch messages");
+  }
+
+  return await response.json();
+}
+
+
+// get messages between member and team leader
+export async function fetchLeaderMessages() {
+  const response = await fetch(`${API_URL}/teamchats/leader`, {
+    method: "GET",
+    headers: {
+      ...getAuthHeaders(),
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) throw new Error('Failed to fetch messages');
+  return await response.json();
+}

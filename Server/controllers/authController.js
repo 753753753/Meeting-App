@@ -30,7 +30,7 @@ exports.registerUser = async (req, res) => {
       message: "User registered successfully",
       token,
       role,
-      user: { id: newUser._id, name: newUser.name, email: newUser.email , teamLeader: user.teamLeader},
+      user: { id: newUser._id, name: newUser.name, email: newUser.email , teamLeader: newUser.teamLeader , teamLeaderJoinedAt: newUser.teamLeaderJoinedAt},
     });
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
@@ -58,7 +58,7 @@ exports.loginUser = async (req, res) => {
       message: "Login successful",
       token,
       role: user.role,
-      user: { id: user._id, name: user.name, email: user.email , teamLeader: user.teamLeader},
+      user: { id: user._id, name: user.name, email: user.email , teamLeader: user.teamLeader , teamLeaderJoinedAt: user.teamLeaderJoinedAt},
     });
   } catch (error) {
      console.error("Login error:", err);
@@ -100,7 +100,8 @@ exports.googlelogin = async (req, res) => {
       name: user.name,
       email: user.email,
       image: user.image,
-      teamLeader: user.teamLeader
+      teamLeader: user.teamLeader,
+      teamLeaderJoinedAt: user.teamLeaderJoinedAt
     },
   });
 };
@@ -143,7 +144,8 @@ exports.googleRegisterUser = async (req, res) => {
         name: user.name,
         email: user.email,
         image: user.image,
-        teamLeader: user.teamLeader
+        teamLeader: user.teamLeader,
+        teamLeaderJoinedAt: user.teamLeaderJoinedAt
       },
     });
   } catch (error) {

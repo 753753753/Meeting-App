@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
+import { BiChevronDown } from 'react-icons/bi'; // arrow icon
 import { CgProfile } from "react-icons/cg";
 import { FaBars, FaSignOutAlt, FaUser } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import profile from '../../assets/profile.png';
 import { useUser } from '../../context/UserContext'; // ✅ Import the context hook
-import { BiChevronDown } from 'react-icons/bi'; // arrow icon
 
 
 const Header = ({ toggleSidebar }) => {
@@ -77,9 +77,12 @@ const Header = ({ toggleSidebar }) => {
             {role === 'admin' && (
               <button
                 className="flex items-center w-full px-4 py-2 hover:bg-gray-800 transition-colors duration-200 cursor-pointer"
-                onClick={() => navigate('/admindashboard')}
+                onClick={() => {
+                  navigate('/admindashboard');
+                  setDropdownOpen(false);
+                }}
               >
-                <FaUser className="mr-2 text-blue-400" />
+                <FaUser className="mr-2" />
                 Manage User
               </button>
             )}

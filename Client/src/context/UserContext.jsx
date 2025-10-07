@@ -1,5 +1,6 @@
 // src/context/UserContext.js
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import { createContext, useContext, useEffect, useState } from 'react';
+import { fetchTeamMembers as fetchTeamMembersAPI } from '../utils/api'; // ✅ import from api
 
 const UserContext = createContext();
 
@@ -7,37 +8,31 @@ export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem('authToken') || null);
   const [role, setRole] = useState(localStorage.getItem('role') || null);
-  const [teamMembers, setTeamMembers] = useState([]); // ✅ NEW
+  const [teamMembers, setTeamMembers] = useState([]);
 
+  // Load user from localStorage on mount
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
+  }, []);
 
-    // Optionally auto-fetch team members if admin is logged in
+  // Auto-fetch team members if admin and token are present
+  useEffect(() => {
     if (role === 'admin' && token) {
-      fetchTeamMembers();
+      loadTeamMembers();
     }
   }, [role, token]);
 
-  // ✅ Fetch team members from backend
-  const fetchTeamMembers = async () => {
+  // ✅ Use centralized API call
+  const loadTeamMembers = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/adminroutes/team', {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
-
-      const data = await response.json();
-      if (!data.error) {
-        setTeamMembers(data); // set fetched members
-      }
+      const members = await fetchTeamMembersAPI();
+      setTeamMembers(members);
     } catch (error) {
       console.error('Failed to fetch team members:', error);
+      setTeamMembers([]); // clear on error
     }
   };
 
@@ -55,7 +50,7 @@ export const UserProvider = ({ children }) => {
     setUser(null);
     setToken(null);
     setRole(null);
-    setTeamMembers([]); // ✅ Clear on logout
+    setTeamMembers([]);
 
     localStorage.removeItem('authToken');
     localStorage.removeItem('role');
@@ -72,7 +67,7 @@ export const UserProvider = ({ children }) => {
         logout,
         teamMembers,
         setTeamMembers,
-        fetchTeamMembers, // ✅ Optional helper
+        fetchTeamMembers: loadTeamMembers, // ✅ expose centralized fetch
       }}
     >
       {children}
@@ -80,6 +75,4 @@ export const UserProvider = ({ children }) => {
   );
 };
 
-export const useUser = () => {
-  return useContext(UserContext);
-};
+export const useUser = () => useContext(UserContext);

@@ -5,6 +5,7 @@ import user from '../assets/LoginUser.png';
 import { useUser } from '../context/UserContext';
 import { auth, provider } from '../firebase';
 import { googleLoginUser, loginUser } from '../utils/api';
+
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');

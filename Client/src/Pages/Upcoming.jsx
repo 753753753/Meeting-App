@@ -1,19 +1,17 @@
-import React, { useEffect, useState, useContext } from 'react';
-import { FaRegCalendarAlt, FaTrashAlt, FaEdit } from 'react-icons/fa';
-import user1 from '../assets/avatar.png';
+import { useContext, useEffect, useState } from 'react';
+import { FaEdit, FaRegCalendarAlt, FaTrashAlt } from 'react-icons/fa';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import user2 from '../assets/avatar (1).png';
 import user3 from '../assets/avatar (2).png';
 import user4 from '../assets/avatar (3).png';
-import { getMeetings, deleteMeeting } from '../utils/api';
+import user1 from '../assets/avatar.png';
 import EditMeetingModal from '../Components/Modal/EditMeetingModal';
-import { updateMeeting } from "../utils/api";
-import { SpeechContext } from '../context/SpeechContext';
-import { useNavigate } from 'react-router-dom';
 import StartMeetingModal from '../Components/Modal/StartMeetingModal';
+import { SpeechContext } from '../context/SpeechContext';
 import { useUser } from '../context/UserContext'; // adjust path as needed
-import { useDispatch } from 'react-redux';
 import { appendTranscript, clearTranscript } from '../redux/slices/transcriptSlice';
-import recognition from '../utils/speechRecognition';
+import { deleteMeeting, getMeetings, updateMeeting } from '../utils/api';
 
 const Upcoming = () => {
   const navigate = useNavigate();

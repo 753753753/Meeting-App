@@ -4,7 +4,7 @@ import { AiOutlinePaperClip } from "react-icons/ai";
 import { BiHappy } from "react-icons/bi";
 import { MdSend } from "react-icons/md";
 import { getGroupMessages, sendGroupMessage } from "../utils/api"; // adjust path
-
+import profile from '../assets/profile.png';
 
 export default function ChatUs() {
   const [messages, setMessages] = useState([]);
@@ -97,7 +97,7 @@ export default function ChatUs() {
               >
                 {!isMine && (
                   <img
-                    src={msg.sender?.image || "/default-avatar.png"}
+                    src={msg.sender?.image ? msg.sender?.image : profile}
                     alt={msg.sender?.name}
                     className="w-8 h-8 sm:w-10 sm:h-10 rounded-full mr-2 object-cover mt-1"
                   />

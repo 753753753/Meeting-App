@@ -11,6 +11,7 @@ const PreviousmeetingRoutes = require("./routes/PreviousmeetingRoutes");
 const PersonalmeetingRoutes = require('./routes/PersonalmeetingRoutes')
 const AdminRoutes = require('./routes/AdminRoutes');
 const groupChatRoutes = require('./routes/groupChatRoutes')
+const teamchats = require('./routes/MessageRoutes')
 // Load environment variables
 dotenv.config();
 
@@ -60,6 +61,7 @@ app.use("/api/Previousmeetings", PreviousmeetingRoutes);
 app.use('/api/Personalmeetings', PersonalmeetingRoutes);
 app.use('/api/adminroutes', AdminRoutes);
 app.use('/api/groupChat' , groupChatRoutes);
+app.use('/api/teamchats' , teamchats);
 // Error handling
 app.use((err, req, res, next) => {
   console.error(err.stack);
