@@ -1,11 +1,11 @@
 import { CgProfile } from "react-icons/cg";
 import { FaCalendarAlt, FaClock, FaHome, FaSignOutAlt, FaTimes, FaUser, FaVideo } from 'react-icons/fa';
+import { GiRamProfile } from "react-icons/gi";
 import { RiChatSmile3Fill, RiTeamFill } from "react-icons/ri";
 import { Link, useLocation } from 'react-router-dom';
 import logo from '../../assets/logo (2).png';
 import profile from '../../assets/profile.png';
 import { useUser } from '../../context/UserContext'; // ✅ Import the context hook
-import { GiRamProfile } from "react-icons/gi";
 export default function Sidebar({ isOpen, onClose, onLogout }) {
   const location = useLocation();
   const { logout, role, user } = useUser(); // ✅ Use context
@@ -16,7 +16,7 @@ export default function Sidebar({ isOpen, onClose, onLogout }) {
   const commonItems = [
     { label: 'Home', icon: <FaHome />, path: '/dashboard' },
     { label: 'Profile', icon: <CgProfile />, path: '/proflie' },
-  ];   
+  ];
 
   if (role === 'admin') {
     navItems = [
@@ -41,7 +41,7 @@ export default function Sidebar({ isOpen, onClose, onLogout }) {
         { label: 'Recordings', icon: <FaVideo />, path: '/recordings' },
         { label: 'Personal Room', icon: <FaUser />, path: '/room' },
         { label: 'Chat Us', icon: <RiChatSmile3Fill />, path: '/chat' },
-        { label: 'Team Leader', icon: <GiRamProfile  />, path: '/chats' },
+        { label: 'Team Leader', icon: <GiRamProfile />, path: '/chats' },
       ];
     }
   }
@@ -62,17 +62,17 @@ export default function Sidebar({ isOpen, onClose, onLogout }) {
 
       {/* Sidebar */}
       <div
-        className={`fixed top-0 left-0 h-screen w-64 bg-[#1C1F2E] text-white p-4 z-40 
+        className={`fixed top-0 left-0 h-screen w-64 bg-[#1C1F2E] text-white px-4 py-4 md:py-0 z-40 
   transform transition-transform duration-300 
   ${isOpen ? 'translate-x-0' : '-translate-x-full'} 
   md:translate-x-0 md:static md:block md:transform-none flex flex-col`}
       >
         {/* Top Section */}
         <div>
-          <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center">
-              <img src={logo} alt="LinkUp Logo" className="w-10 h-10 mr-2" />
-              <h1 className="text-2xl font-bold">LINK UP</h1>
+          <div className="flex items-center justify-between mb-8 md:mb-0">
+            <div className="hidden md:flex items-center">
+              <img src={logo} alt="LinkUp Logo" className="w-20 h-20" />
+              <h1 className="text-2xl font-bold relative -translate-x-4">LINK UP</h1>
             </div>
             {/* Close button on mobile */}
             <button className="md:hidden" onClick={onClose}>
