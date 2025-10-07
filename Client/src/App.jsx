@@ -1,24 +1,22 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import MainLayout from './layouts/MainLayout';
-import Home from './Pages/Home';
-import Upcoming from "./Pages/Upcoming.jsx"
-import Previous from './Pages/Previous';
-import Recordings from './Pages/Recordings';
-import PersonalRoom from './Pages/PersonalRoom';
-import Room from './Dashboard/Room';
+import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import AdminRegister from './Admin/AdminRegister.jsx';
 import Login from './Auth/Login';
 import Register from './Auth/Register';
-import { UserProvider, useUser } from './context/UserContext';
 import PrivateRoute from './Components/PrivateRoute/PrivateRoute';
-import { Navigate } from 'react-router-dom';
+import Profile from './Components/Profile/Profile.jsx';
 import { SpeechProvider } from './context/SpeechContext';
-import ErrorBoundary from "./ErrorBoundary.jsx" // Import the ErrorBoundary component
-import AdminRegister from './Admin/AdminRegister.jsx';
+import { UserProvider, useUser } from './context/UserContext';
 import AdminDashboard from './Dashboard/AdminDashboard.jsx';
-import ChatUs from './Pages/ChatUs.jsx';
-import Profile from './Components/Profile/Profile.jsx'
+import Room from './Dashboard/Room';
+import ErrorBoundary from "./ErrorBoundary.jsx"; // Import the ErrorBoundary component
+import MainLayout from './layouts/MainLayout';
 import TeamMembers from './Pages/Admin/TeamMembers.jsx';
+import ChatUs from './Pages/ChatUs.jsx';
+import Home from './Pages/Home';
+import PersonalRoom from './Pages/PersonalRoom';
+import Previous from './Pages/Previous';
+import Recordings from './Pages/Recordings';
+import Upcoming from "./Pages/Upcoming.jsx";
 import TeamLeader from './Pages/User/TeamLeader.jsx';
 
 // Component to handle routes that need context
@@ -26,7 +24,7 @@ const AppRoutes = () => {
   const { user, role } = useUser();
 
   const DefaultRedirect = () => {
-    return user ? <Navigate to="/dashboard" /> : <Navigate to="/login" />;
+    return user ? <Navigate to="/dashboard" /> : <Navigate to="/register" />;
   };
 
   return (
