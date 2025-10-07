@@ -33,24 +33,13 @@ const allowedOrigins = [
   'https://meeting-app-client.onrender.com' // live frontend
 ];
 
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      // allow requests with no origin (like Postman) or from allowed origins
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true, // needed if sending cookies or auth
-  })
-);
+app.use(cors({ origin: "*", credentials: true }));
 app.use(express.json());
 
 // Health check
 app.get("/", (req, res) => {
-  res.send("API is running...");
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.send("✅ Backend is live and running perfectly!");
 });
 
 // API Routes
