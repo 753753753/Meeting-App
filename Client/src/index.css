@@ -47,3 +47,13 @@ html{
   scrollbar-color: black transparent;
 }
 
+/* in your CSS or Tailwind plugin */
+@media (max-width: 360px) {
+  .custom-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .custom-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+}

@@ -6,7 +6,7 @@ import { FaArrowLeft } from "react-icons/fa";
 import { MdSend } from "react-icons/md";
 import profile from "../../assets/profile.png";
 import { useUser } from "../../context/UserContext";
-import { sendMessageAPI, fetchMessagesAPI } from "../../utils/api";
+import { fetchMessagesAPI, sendMessageAPI } from "../../utils/api";
 
 
 function TeamMembers() {
@@ -126,7 +126,7 @@ function TeamMembers() {
                                                 ? "bg-blue-600 text-white rounded-lg rounded-br-none rounded-tr-none shadow-md"
                                                 : "bg-gray-700 text-gray-200 rounded-lg rounded-bl-none rounded-tl-none shadow-md"
                                                 }`}
-                                        >                                         
+                                        >
                                             <span className="text-[13px] sm:text-sm md:text-base">
                                                 {msg.content}
                                             </span>
@@ -145,18 +145,42 @@ function TeamMembers() {
                 </div>
 
                 {/* Input */}
-                <div className="px-4 py-3 border-t border-gray-800 flex items-center gap-3 bg-gray-800">
-                    <button className="text-gray-400 hover:text-gray-200">
-                        <AiOutlinePaperClip size={22} />
-                    </button>
+                <div className="px-4 py-3 border-t border-gray-800 bg-gray-800 flex items-center gap-3">
+                    {/* Input container */}
+                    <div className="flex items-center flex-1 bg-gray-700 rounded-full px-3 py-2 gap-2">
+                        {/* Emoji Button */}
+                        <button
+                            className="text-gray-400 hover:text-gray-200"
+                            onClick={() => setShowEmoji(!showEmoji)}
+                        >
+                            <BiHappy className="w-5 h-5 sm:w-6 sm:h-6" />
+                        </button>
 
+                        {/* Input */}
+                        <input
+                            type="text"
+                            value={input}
+                            onChange={(e) => setInput(e.target.value)}
+                            onKeyDown={(e) => e.key === "Enter" && sendMessageHandler()}
+                            placeholder="Type a message..."
+                            className="flex-1 bg-transparent text-white placeholder-gray-400 focus:outline-none text-sm sm:text-base"
+                        />
+
+                        {/* Attachment / Document */}
+                        <button className="text-gray-400 hover:text-gray-200">
+                            <AiOutlinePaperClip className="w-5 h-5 sm:w-6 sm:h-6" />
+                        </button>
+                    </div>
+
+                    {/* Send Button */}
                     <button
-                        className="text-gray-400 hover:text-gray-200"
-                        onClick={() => setShowEmoji(!showEmoji)}
+                        onClick={sendMessageHandler}
+                        className="bg-blue-600 hover:bg-blue-500 rounded-full p-2 sm:p-3 flex items-center justify-center"
                     >
-                        <BiHappy size={22} />
+                        <MdSend className="w-4 h-4 sm:w-5 sm:h-5" />
                     </button>
 
+                    {/* Emoji Picker */}
                     {showEmoji && (
                         <div className="fixed inset-0 flex items-center justify-center z-50 px-4">
                             <div
@@ -168,23 +192,8 @@ function TeamMembers() {
                             </div>
                         </div>
                     )}
-
-                    <input
-                        type="text"
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                        onKeyDown={(e) => e.key === "Enter" && sendMessageHandler()}
-                        placeholder="Type a message..."
-                        className="flex-1 bg-gray-700 px-4 py-2 text-white placeholder-gray-400 focus:outline-none rounded-lg"
-                    />
-
-                    <button
-                        onClick={sendMessageHandler}
-                        className="bg-blue-600 hover:bg-blue-500 rounded-full p-2"
-                    >
-                        <MdSend size={20} />
-                    </button>
                 </div>
+
             </div>
         );
     }
