@@ -30,7 +30,7 @@ app.use((req, res, next) => {
 // Middleware
 const allowedOrigins = [
   'http://localhost:5173', // for local dev
-  'https://meeting-app-client.onrender.com' // live frontend
+  'https://fascinating-cobbler-fbcd88.netlify.app/' // live frontend
 ];
 
 app.use(cors({ origin: "*", credentials: true }));
