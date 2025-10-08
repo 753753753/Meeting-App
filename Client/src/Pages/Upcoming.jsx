@@ -154,6 +154,7 @@ const Upcoming = () => {
                 })}
               </p>
 
+
               <div className="mt-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div className="flex -space-x-3 flex-wrap sm:flex-nowrap justify-start">
                   <img src={user1} alt="User 1" className="w-8 h-8 rounded-full border-2 border-[#1C1F2E]" />
