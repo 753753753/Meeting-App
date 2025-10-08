@@ -177,7 +177,7 @@ const Upcoming = () => {
                   <div className="w-8 h-8 rounded-full bg-[#2E3450] text-white text-xs flex items-center justify-center border-2 border-[#1C1F2E]">+9</div>
                 </div>
                 <div className="flex gap-2 justify-start sm:justify-end mt-4 sm:mt-0">
-                  {new Date(meeting.date) <= new Date(new Date().toISOString()) && (
+                  {new Date(meeting.date).getTime() <= Date.now() && (
                     <button
                       className="bg-blue-600 text-white px-3 py-1 rounded cursor-pointer text-sm"
                       onClick={() => {
@@ -188,7 +188,6 @@ const Upcoming = () => {
                       Start
                     </button>
                   )}
-
                   <button
                     className="bg-[#252A41] text-white px-3 py-1 rounded cursor-pointer text-sm"
                     onClick={() => handleCopyInvitation(meeting._id)}
