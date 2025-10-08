@@ -131,13 +131,6 @@ function Profile() {
                             </>
                         )}
                     </div>
-
-                    {/* Edit Profile Button */}
-                    <div className="mt-8 flex justify-center">
-                        <button className="bg-gradient-to-r from-blue-500 to-blue-400 hover:from-blue-600 hover:to-blue-500 transition-colors text-white font-semibold py-3 px-12 rounded-full shadow-lg hover:scale-105 transform duration-300">
-                            Edit Profile
-                        </button>
-                    </div>
                 </div>
 
             </div>
