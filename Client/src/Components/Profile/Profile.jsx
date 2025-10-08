@@ -34,17 +34,29 @@ function Profile() {
                 <div className="relative bg-gradient-to-b from-blue-700 to-blue-500 rounded-3xl p-8 shadow-2xl flex flex-col items-center justify-center hover:scale-105 transform transition-transform duration-500 w-full md:w-80">
                     <div className="absolute inset-0 bg-black/20 rounded-3xl"></div>
 
-                    <img
-                        src={user?.image ? user.image : profile}
-                        alt={user?.name}
-                        className="w-32 h-32 md:w-36 md:h-36 rounded-full border-4 border-white object-cover mb-4 shadow-xl z-10 animate-bounce-slow"
-                    />
+                    {user?.image ? (
+                        <img
+                            src={user.image}
+                            alt={user.name}
+                            className="w-32 h-32 md:w-36 md:h-36 rounded-full border-4 border-white object-cover mb-4 shadow-xl z-10 animate-bounce-slow"
+                        />
+                    ) : (
+                        <div
+                            className="w-32 h-32 md:w-36 md:h-36 rounded-full flex items-center justify-center text-4xl md:text-5xl font-bold text-white border-4 border-white shadow-xl z-10 animate-bounce-slow"
+                            style={{
+                                backgroundColor: `hsl(${user?.name?.charCodeAt(0) * 15 % 360}, 70%, 50%)`
+                            }}
+                        >
+                            {user?.name ? user.name.charAt(0).toUpperCase() : "U"}
+                        </div>
+                    )}
 
-                    <div className="text-center z-10">
+                    <div className="text-center z-10 mt-4">
                         <h1 className="text-3xl md:text-4xl font-bold drop-shadow-lg">{user?.name}</h1>
                         <p className="text-blue-200 text-lg md:text-xl mt-1">{role}</p>
                     </div>
                 </div>
+
 
                 {/* Right Side - Admin/User Info */}
                 <div className="flex-1 bg-gray-900/70 backdrop-blur-md rounded-3xl shadow-2xl overflow-hidden border border-blue-500/30 animate-fadeIn p-6 flex flex-col">

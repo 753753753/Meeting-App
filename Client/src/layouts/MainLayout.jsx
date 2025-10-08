@@ -17,7 +17,7 @@ const MainLayout = ({ children }) => {
       {/* Content area: scrollable and margin left on desktop */}
       <div className="flex-1 flex flex-col">
         <Header toggleSidebar={toggleSidebar} />
-        <main className="mt-14 overflow-y-auto h-[calc(100vh-3.5rem)] custom-scrollbar bg-gray-950 text-white">
+        <main className="mt-14 overflow-y-auto h-[calc(100dvh-3.5rem)] custom-scrollbar bg-gray-950 text-white">
           {children}
         </main>
       </div>
