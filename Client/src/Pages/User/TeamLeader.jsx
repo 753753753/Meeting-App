@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from 'react';
 import { AiOutlinePaperClip } from "react-icons/ai";
 import { BiHappy } from "react-icons/bi";
 import { MdSend } from "react-icons/md";
-import profile from '../../assets/profile.png';
 import { useUser } from '../../context/UserContext';
 import { fetchLeaderMessages, fetchTeamLeader, sendMessageAPI } from '../../utils/api';
 function TeamLeader() {
@@ -71,11 +70,25 @@ function TeamLeader() {
     <div className="flex flex-col h-full bg-gray-950 text-white shadow-lg border border-gray-800 overflow-hidden">
       {/* Header */}
       <div className="flex items-center p-4 border-b border-gray-800 bg-gray-900">
-        <img
-          src={teamLeader?.image || profile}
-          alt={teamLeader?.name}
-          className="w-10 h-10 rounded-full object-cover border border-gray-600 mr-3"
-        />
+        {teamLeader?.image ? (
+          <img
+            src={teamLeader.image}
+            alt={teamLeader?.name || "Team Leader"}
+            className="w-10 h-10 rounded-full object-cover border border-gray-600 mr-3"
+          />
+        ) : (
+          <div
+            className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-white border border-gray-600 mr-3"
+            style={{
+              backgroundColor: teamLeader?.name
+                ? `hsl(${teamLeader.name.charCodeAt(0) * 15 % 360}, 70%, 50%)`
+                : "#999"
+            }}
+          >
+            {teamLeader?.name ? teamLeader.name.charAt(0).toUpperCase() : "U"}
+          </div>
+        )}
+
         <div>
           <p className="font-semibold text-white">{teamLeader?.name}</p>
           <p className="text-sm text-gray-400">online</p>

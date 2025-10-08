@@ -4,7 +4,6 @@ import { GiRamProfile } from "react-icons/gi";
 import { RiChatSmile3Fill, RiTeamFill } from "react-icons/ri";
 import { Link, useLocation } from 'react-router-dom';
 import logo from '../../assets/logo (2).png';
-import profile from '../../assets/profile.png';
 import { useUser } from '../../context/UserContext'; // ✅ Import the context hook
 export default function Sidebar({ isOpen, onClose, onLogout }) {
   const location = useLocation();
@@ -102,11 +101,25 @@ export default function Sidebar({ isOpen, onClose, onLogout }) {
         {/* Bottom Section: Settings + Logout */}
         <div className="mt-10 left-4 right-4 flex items-center p-3 rounded-2xl border border-gray-700">
           {/* Profile Picture */}
-          <img
-            src={user?.image ? user?.image : profile}
-            alt="User Profile"
-            className="w-10 h-10 rounded-full mr-4 object-cover"
-          />
+          {user?.image ? (
+            <img
+              src={user.image}
+              alt={user?.name || "User Profile"}
+              className="w-10 h-10 rounded-full mr-4 object-cover"
+            />
+          ) : (
+            <div
+              className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-white mr-4"
+              style={{
+                backgroundColor: user?.name
+                  ? `hsl(${user.name.charCodeAt(0) * 15 % 360}, 70%, 50%)`
+                  : "#999"
+              }}
+            >
+              {user?.name ? user.name.charAt(0).toUpperCase() : "U"}
+            </div>
+          )}
+
 
           {/* Username */}
           <p className="flex-1 text-white font-semibold text-sm">{user?.name}</p>

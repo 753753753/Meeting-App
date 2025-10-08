@@ -4,7 +4,6 @@ import { CgProfile } from "react-icons/cg";
 import { FaBars, FaSignOutAlt, FaUser } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import logo from '../../assets/logo (2).png';
-import profile from '../../assets/profile.png';
 import { useUser } from '../../context/UserContext'; // ✅ Import the context hook
 
 const Header = ({ toggleSidebar }) => {
@@ -48,13 +47,28 @@ const Header = ({ toggleSidebar }) => {
       {/* Right: Profile dropdown */}
       <div className="ml-auto relative" ref={dropdownRef}>
         <div className="relative w-8 h-8">
-          <img
-            src={user?.image ? user?.image : profile}
-            alt="Profile"
-            referrerPolicy="no-referrer"
-            onClick={() => setDropdownOpen(!dropdownOpen)}
-            className="w-8 h-8 rounded-full object-cover border-2 border-white cursor-pointer"
-          />
+          {user?.image ? (
+            <img
+              src={user.image}
+              alt={user?.name ? user.name : "Profile"}
+              referrerPolicy="no-referrer"
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+              className="w-8 h-8 rounded-full object-cover border-2 border-white cursor-pointer"
+            />
+          ) : (
+            <div
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+              className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold text-white border-2 border-white bg-gray-500 cursor-pointer"
+              style={{
+                backgroundColor: user?.name
+                  ? `hsl(${user.name.charCodeAt(0) * 15 % 360}, 70%, 50%)`
+                  : "#999"
+              }}
+            >
+              {user?.name ? user.name.charAt(0).toUpperCase() : "U"}
+            </div>
+          )}
+
           <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-white/60 rounded-full flex items-center justify-center pointer-events-none">
             <BiChevronDown className="text-black w-4 h-4" />
           </div>

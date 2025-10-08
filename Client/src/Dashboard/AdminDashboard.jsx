@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import profile from '../assets/profile.png';
 import { useUser } from '../context/UserContext';
 import { addUserToTeam, removeUserFromTeam } from "../utils/api"; // adjust path
 const AdminDashboard = () => {
@@ -91,11 +90,24 @@ const AdminDashboard = () => {
                 className="flex flex-col sm:flex-row sm:items-center justify-between bg-gray-800 p-4 rounded-2xl border border-gray-700 hover:bg-gray-700 shadow-md transition-all"
               >
                 <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 w-full sm:w-auto">
-                  <img
-                    src={member.image ? member.image : profile}
-                    alt={member.name}
-                    className="w-12 h-12 rounded-full object-cover border-2 border-blue-500"
-                  />
+                  {member?.image ? (
+                    <img
+                      src={member.image}
+                      alt={member?.name || "Member"}
+                      className="w-12 h-12 rounded-full object-cover border-2 border-blue-500"
+                    />
+                  ) : (
+                    <div
+                      className="w-12 h-12 rounded-full flex items-center justify-center text-sm font-bold text-white border-2 border-blue-500"
+                      style={{
+                        backgroundColor: member?.name
+                          ? `hsl(${member.name.charCodeAt(0) * 15 % 360}, 70%, 50%)`
+                          : "#999"
+                      }}
+                    >
+                      {member?.name ? member.name.charAt(0).toUpperCase() : "U"}
+                    </div>
+                  )}
                   <div className="break-words">
                     <p className="font-semibold">{member.name}</p>
                     <p className="text-gray-400 text-sm truncate sm:truncate-none">

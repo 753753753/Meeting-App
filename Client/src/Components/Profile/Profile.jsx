@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { AiOutlineCalendar, AiOutlineCheckCircle, AiOutlineMail, AiOutlineUser } from "react-icons/ai";
 import { FaUsers } from "react-icons/fa";
-import profile from '../../assets/profile.png';
 import { useUser } from '../../context/UserContext'; // ✅ Import the context hook
 import { fetchTeamLeader } from '../../utils/api';
 
@@ -158,11 +157,25 @@ function Profile() {
                                 key={member._id}
                                 className="flex items-center bg-gray-800 p-4 rounded-2xl shadow-lg border border-gray-700 hover:scale-105 transform transition-transform duration-300"
                             >
-                                <img
-                                    src={member.image || profile}
-                                    alt={member.name}
-                                    className="w-14 h-14 rounded-full object-cover border-2 border-white mr-4"
-                                />
+                                {member.image ? (
+                                    <img
+                                        src={member.image}
+                                        alt={member.name || "Profile"}
+                                        className="w-14 h-14 rounded-full object-cover border-2 border-white mr-4"
+                                    />
+                                ) : (
+                                    <div
+                                        className="w-14 h-14 rounded-full flex items-center justify-center text-lg font-bold text-white border-2 border-white bg-gray-500 mr-4"
+                                        style={{
+                                            backgroundColor: member?.name
+                                                ? `hsl(${member.name.charCodeAt(0) * 15 % 360}, 70%, 50%)`
+                                                : "#999"
+                                        }}
+                                    >
+                                        {member?.name ? member.name.charAt(0).toUpperCase() : "U"}
+                                    </div>
+                                )}
+
                                 <div>
                                     <p className="font-semibold text-white">{member.name}</p>
                                     <p className="text-gray-400 text-sm">{member.email}</p>
@@ -187,11 +200,24 @@ function Profile() {
                     <h2 className="text-xl font-semibold mb-4 text-center sm:text-left">My Team Leader</h2>
 
                     <div className="flex flex-col sm:flex-row items-center sm:items-start bg-gray-800 p-4 rounded-2xl shadow-lg border border-gray-700 hover:scale-105 transform transition-transform duration-300 mx-auto max-w-md sm:max-w-full">
-                        <img
-                            src={teamLeader.image || profile}
-                            alt={teamLeader.name}
-                            className="w-14 h-14 rounded-full object-cover border-2 border-white mb-3 sm:mb-0 sm:mr-4"
-                        />
+                        {teamLeader.image ? (
+                            <img
+                                src={teamLeader.image}
+                                alt={teamLeader.name || "Profile"}
+                                className="w-14 h-14 rounded-full object-cover border-2 border-white mb-3 sm:mb-0 sm:mr-4"
+                            />
+                        ) : (
+                            <div
+                                className="w-14 h-14 rounded-full flex items-center justify-center text-lg font-bold text-white border-2 border-white bg-gray-500 mb-3 sm:mb-0 sm:mr-4"
+                                style={{
+                                    backgroundColor: teamLeader?.name
+                                        ? `hsl(${teamLeader.name.charCodeAt(0) * 15 % 360}, 70%, 50%)`
+                                        : "#999"
+                                }}
+                            >
+                                {teamLeader?.name ? teamLeader.name.charAt(0).toUpperCase() : "U"}
+                            </div>
+                        )}
 
                         <div className="text-center sm:text-left break-words">
                             <p className="font-semibold text-white">{teamLeader.name}</p>

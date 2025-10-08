@@ -5,7 +5,6 @@ import { BiHappy } from "react-icons/bi";
 import { FaArrowLeft } from "react-icons/fa";
 import { MdSend } from "react-icons/md";
 import { useNavigate } from 'react-router-dom';
-import profile from "../../assets/profile.png";
 import { useUser } from "../../context/UserContext";
 import { fetchMessagesAPI, sendMessageAPI } from "../../utils/api";
 
@@ -88,11 +87,25 @@ function TeamMembers() {
                     >
                         <FaArrowLeft />
                     </button>
-                    <img
-                        src={selectedMember.image || profile}
-                        alt={selectedMember.name}
-                        className="w-10 h-10 rounded-full object-cover border border-gray-600 mr-3"
-                    />
+                    {selectedMember?.image ? (
+                        <img
+                            src={selectedMember.image}
+                            alt={selectedMember?.name || "Member"}
+                            className="w-10 h-10 rounded-full object-cover border border-gray-600 mr-3"
+                        />
+                    ) : (
+                        <div
+                            className="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold text-white border border-gray-600 mr-3"
+                            style={{
+                                backgroundColor: selectedMember?.name
+                                    ? `hsl(${selectedMember.name.charCodeAt(0) * 15 % 360}, 70%, 50%)`
+                                    : "#999"
+                            }}
+                        >
+                            {selectedMember?.name ? selectedMember.name.charAt(0).toUpperCase() : "U"}
+                        </div>
+                    )}
+
                     <div>
                         <p className="font-semibold text-white">{selectedMember.name}</p>
                         <p className="text-sm text-gray-400">online</p>
@@ -226,11 +239,25 @@ function TeamMembers() {
                                     className={`flex items-center p-4 cursor-pointer hover:bg-gray-800 transition-colors ${index !== filteredMembers.length - 1 ? "border-b border-gray-700" : ""
                                         }`}
                                 >
-                                    <img
-                                        src={member.image || profile}
-                                        alt={member.name}
-                                        className="w-12 h-12 rounded-full object-cover border border-gray-600 mr-4"
-                                    />
+                                    {member?.image ? (
+                                        <img
+                                            src={member.image}
+                                            alt={member?.name || "Member"}
+                                            className="w-12 h-12 rounded-full object-cover border border-gray-600 mr-4"
+                                        />
+                                    ) : (
+                                        <div
+                                            className="w-12 h-12 rounded-full flex items-center justify-center text-sm font-bold text-white border border-gray-600 mr-4"
+                                            style={{
+                                                backgroundColor: member?.name
+                                                    ? `hsl(${member.name.charCodeAt(0) * 15 % 360}, 70%, 50%)`
+                                                    : "#999"
+                                            }}
+                                        >
+                                            {member?.name ? member.name.charAt(0).toUpperCase() : "U"}
+                                        </div>
+                                    )}
+
                                     <div className="flex-1 min-w-0">
                                         <div className="flex justify-between items-center">
                                             <p className="font-semibold text-white truncate">{member.name}</p>
