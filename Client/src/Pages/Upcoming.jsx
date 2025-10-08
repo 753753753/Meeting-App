@@ -107,8 +107,18 @@ const Upcoming = () => {
     navigate(`/room/${meetingId}`);
   };
 
+  const formatDateTime = (dateString) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
 
-  console.log("meetings", meetings);
+    return `${day}-${month}-${year}, ${hours}:${minutes}`;
+  };
+
+
   return (
     <div className="flex-1 p-4 md:p-6 bg-gray-950 min-h-screen">
       <div className="flex justify-between items-center mb-6">
@@ -147,7 +157,7 @@ const Upcoming = () => {
                 <h4 className="font-semibold text-lg text-white">{meeting.title}</h4>
               </div>
               <p className="text-sm text-white mt-3">
-                {new Date(meeting.date).toISOString().slice(0, 16)}
+                 {formatDateTime(meeting.date)}
               </p>
 
 
