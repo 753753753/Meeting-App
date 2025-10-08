@@ -166,11 +166,10 @@ const Upcoming = () => {
                 </div>
                 <div className="flex gap-2 justify-start sm:justify-end mt-4 sm:mt-0">
                   {(() => {
-                    const meetingTime = new Date(meeting.date + "Z").getTime(); // Ensure UTC
+                    const meetingTime = new Date(new Date(meeting.date).toISOString()).getTime();
                     const now = Date.now();
-                    const startBuffer = 5 * 60 * 1000; // 5 minutes before meeting
+                    const startBuffer = 5 * 60 * 1000; // 5 minutes early
 
-                    // Show Start button if meeting is within 5 minutes or already started
                     if (meetingTime - startBuffer <= now) {
                       return (
                         <button
@@ -186,6 +185,7 @@ const Upcoming = () => {
                     }
                     return null;
                   })()}
+
 
                   <button
                     className="bg-[#252A41] text-white px-3 py-1 rounded cursor-pointer text-sm"
