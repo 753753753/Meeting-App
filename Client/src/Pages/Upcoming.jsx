@@ -106,7 +106,8 @@ const Upcoming = () => {
     recognition.start();
     navigate(`/room/${meetingId}`);
   };
-
+  
+  console.log(new Date());
   return (
     <div className="flex-1 p-4 md:p-6 bg-gray-950 min-h-screen">
       <div className="flex justify-between items-center mb-6">
@@ -166,29 +167,17 @@ const Upcoming = () => {
                   <div className="w-8 h-8 rounded-full bg-[#2E3450] text-white text-xs flex items-center justify-center border-2 border-[#1C1F2E]">+9</div>
                 </div>
                 <div className="flex gap-2 justify-start sm:justify-end mt-4 sm:mt-0">
-                  {(() => {
-                    const meetingDate = new Date(meeting.date);
-                    const now = new Date();
-
-                    // Convert both to IST
-                    const meetingIST = new Date(
-                      meetingDate.getTime() + 5.5 * 60 * 60 * 1000
-                    ); // UTC +5:30
-                    const nowIST = new Date(now.getTime() + 5.5 * 60 * 60 * 1000);
-
-                    return meetingIST <= nowIST ? (
-                      <button
-                        className="bg-blue-600 text-white px-3 py-1 rounded cursor-pointer text-sm"
-                        onClick={() => {
-                          setMeetingToStart(meeting._id);
-                          setIsStartModalOpen(true);
-                        }}
-                      >
-                        Start
-                      </button>
-                    ) : null;
-                  })()}
-
+                  {new Date(meeting.date) <= new Date() && (
+                    <button
+                      className="bg-blue-600 text-white px-3 py-1 rounded cursor-pointer text-sm"
+                      onClick={() => {
+                        setMeetingToStart(meeting._id);
+                        setIsStartModalOpen(true);
+                      }}
+                    >
+                      Start
+                    </button>
+                  )}
                   <button
                     className="bg-[#252A41] text-white px-3 py-1 rounded cursor-pointer text-sm"
                     onClick={() => handleCopyInvitation(meeting._id)}
