@@ -106,8 +106,21 @@ const Upcoming = () => {
     recognition.start();
     navigate(`/room/${meetingId}`);
   };
-  
-  console.log(new Date());
+
+  const formatLocalISO = (date = new Date()) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+    const seconds = String(date.getSeconds()).padStart(2, "0");
+
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+  };
+
+  console.log(formatLocalISO(new Date()));
+
+
   return (
     <div className="flex-1 p-4 md:p-6 bg-gray-950 min-h-screen">
       <div className="flex justify-between items-center mb-6">
@@ -167,7 +180,7 @@ const Upcoming = () => {
                   <div className="w-8 h-8 rounded-full bg-[#2E3450] text-white text-xs flex items-center justify-center border-2 border-[#1C1F2E]">+9</div>
                 </div>
                 <div className="flex gap-2 justify-start sm:justify-end mt-4 sm:mt-0">
-                  {new Date(meeting.date) <= new Date() && (
+                  {new Date(meeting.date).toISOString().slice(0, 19) <= formatLocalISO(new Date()) && (
                     <button
                       className="bg-blue-600 text-white px-3 py-1 rounded cursor-pointer text-sm"
                       onClick={() => {
