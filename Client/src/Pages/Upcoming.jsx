@@ -107,8 +107,6 @@ const Upcoming = () => {
     navigate(`/room/${meetingId}`);
   };
 
-
-
   return (
     <div className="flex-1 p-4 md:p-6 bg-gray-950 min-h-screen">
       <div className="flex justify-between items-center mb-6">
@@ -148,15 +146,13 @@ const Upcoming = () => {
               </div>
               <p className="text-sm text-white mt-3">
                 {(() => {
-                  const date = new Date(meeting.date);
-                  let hours = date.getHours();
-                  const minutes = date.getMinutes().toString().padStart(2, '0');
-                  const ampm = hours >= 12 ? 'PM' : 'AM';
-                  hours = hours % 12 || 12; // convert 0 -> 12
-                  const day = date.getDate().toString().padStart(2, '0');
-                  const month = (date.getMonth() + 1).toString().padStart(2, '0');
-                  const year = date.getFullYear();
-                  return `${year}-${month}-${day} ${hours}:${minutes} ${ampm}`;
+                  const iso = new Date(meeting.date).toISOString().slice(0, 16); // "2025-10-09T01:33"
+                  const [datePart, timePart] = iso.split("T");
+                  let [year, month, day] = datePart.split("-");
+                  let [hour, minute] = timePart.split(":").map(Number);
+                  const ampm = hour >= 12 ? "PM" : "AM";
+                  hour = hour % 12 || 12; // convert 0 -> 12
+                  return `${day}-${month}-${year}, ${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")} ${ampm}`;
                 })()}
               </p>
 
