@@ -10,32 +10,27 @@ export async function getAIUpdatedNotes(transcript) {
     const response = await ai.models.generateContent({
       model: "gemini-2.0-flash",
       contents: `
-You are an expert meeting assistant, translator, and educator.
+You are an expert AI meeting summarizer.
 
-Your job is to convert the following multi-language, partially broken meeting transcript into clean, high-quality meeting notes in English.
+Convert the following raw, multilingual meeting transcript into professional English meeting notes.
 
-### Requirements:
-- Fill in missing or unclear parts using best inference based on the meeting context and title: .
-- Translate any non-English content (e.g., Hindi) into **clear, fluent English**.
-- Add helpful context or missing details related to the meeting title to improve clarity.
-- Provide simple definitions or context for technical terms.
-- Format under these exact sections:
+### Guidelines:
+- Translate Hindi or other languages into fluent English.
+- Fix minor errors, grammar, or incomplete sentences.
+- If a sentence is unclear, infer **lightly** using only the nearby context.
+- Do not fabricate new topics, data, or decisions.
+- Keep it concise, factual, and well-formatted.
 
-  1. 📚 **Main Topics Discussed**
-     - Include topic names and brief definitions/explanations.
-  
-  2. ✅ **Key Points and Decisions**
-     - List any decisions or agreements made.
-  
-  3. 📝 **Action Items**
-     - Include who needs to do what and any deadlines (if mentioned).
-
-Avoid greetings, disclaimers, or unnecessary text.
+### Structure:
+1. 📚 **Main Topics Discussed**
+2. ✅ **Key Points and Decisions**
+3. 📝 **Action Items**
 
 ### Transcript:
 ${transcript.content}
-      `,
+  `,
     });
+
     return response.text;
   } catch (error) {
     console.error("Gemini AI error:", error);
