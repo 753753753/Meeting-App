@@ -100,7 +100,7 @@ export default function Sidebar({ isOpen, onClose, onLogout }) {
         </div>
 
         {/* Bottom Section: Settings + Logout */}
-        <div className="absolute bottom-4 left-4 right-4 flex items-center p-3 rounded-2xl border border-gray-700">
+        <div className="mt-10 left-4 right-4 flex items-center p-3 rounded-2xl border border-gray-700">
           {/* Profile Picture */}
           <img
             src={user?.image ? user?.image : profile}

@@ -115,7 +115,7 @@ const Upcoming = () => {
         <h3 className="text-2xl font-semibold text-white">Upcoming Meetings</h3>
       </div>
 
-      {meetings.length === 0 ? (
+      {(meetings?.length || 0) === 0 ? (
         <div className="flex justify-center items-center h-96 text-center">
           <div className="bg-[#1C1F2E] p-6 rounded-lg shadow-xl text-white">
             <h4 className="text-xl font-semibold mb-4">No Meetings Found</h4>

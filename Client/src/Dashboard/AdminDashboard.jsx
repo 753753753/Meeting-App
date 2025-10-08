@@ -52,71 +52,74 @@ const AdminDashboard = () => {
   console.log(teamMembers);
 
   return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 relative overflow-hidden text-white">
-  {/* Background Decorative Circles */}
-  <div className="absolute -top-32 -left-32 w-96 h-96 bg-blue-700/20 rounded-full blur-3xl animate-pulse-slow"></div>
-  <div className="absolute -bottom-32 -right-32 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-pulse-slow"></div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 relative overflow-hidden text-white">
+      {/* Background Decorative Circles */}
+      <div className="absolute -top-32 -left-32 w-72 h-72 sm:w-96 sm:h-96 bg-blue-700/20 rounded-full blur-3xl animate-pulse-slow"></div>
+      <div className="absolute -bottom-32 -right-32 w-72 h-72 sm:w-96 sm:h-96 bg-blue-500/20 rounded-full blur-3xl animate-pulse-slow"></div>
 
-    {/* Main Dashboard Area */}
-    <div className="flex-1 p-8 overflow-y-auto">
-      {/* Header */}
-      <h2 className="text-4xl font-bold text-blue-400 mb-8 text-center">Team Management</h2>
+      {/* Main Dashboard Area */}
+      <div className="flex-1 p-4 sm:p-8 max-w-4xl mx-auto">
+        {/* Header */}
+        <h2 className="text-3xl sm:text-4xl font-bold text-blue-400 mb-6 sm:mb-8 text-center">Team Management</h2>
 
-      {/* Add Team Member */}
-      <div className="bg-gray-900 p-6 rounded-3xl shadow-lg mb-8">
-        <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-          <input
-            type="email"
-            placeholder="Enter team member's email to add in your team"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="p-3 flex-1 bg-gray-800 text-white rounded-xl border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <button
-            onClick={handleAddUser}
-            className="bg-blue-500 hover:bg-blue-600 text-white py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all"
-          >
-            Add Member
-          </button>
+        {/* Add Team Member */}
+        <div className="bg-gray-900 p-4 sm:p-6 rounded-3xl shadow-lg mb-6 sm:mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+            <input
+              type="email"
+              placeholder="Enter team member's email to add in your team"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="p-3 flex-1 bg-gray-800 text-white rounded-xl border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 break-words
+             placeholder:text-[10px] sm:placeholder:text-base"
+            />
+            <button
+              onClick={handleAddUser}
+              className="bg-blue-500 hover:bg-blue-600 text-white py-3 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all w-full sm:w-auto"
+            >
+              Add Member
+            </button>
+          </div>
+        </div>
+
+        {/* Team Members */}
+        <div className="space-y-4">
+          {teamMembers.length > 0 ? (
+            teamMembers.map((member) => (
+              <div
+                key={member._id}
+                className="flex flex-col sm:flex-row sm:items-center justify-between bg-gray-800 p-4 rounded-2xl border border-gray-700 hover:bg-gray-700 shadow-md transition-all"
+              >
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 w-full sm:w-auto">
+                  <img
+                    src={member.image ? member.image : profile}
+                    alt={member.name}
+                    className="w-12 h-12 rounded-full object-cover border-2 border-blue-500"
+                  />
+                  <div className="break-words">
+                    <p className="font-semibold">{member.name}</p>
+                    <p className="text-gray-400 text-sm truncate sm:truncate-none">
+                      {member.email}
+                    </p>
+                    <p className="text-gray-400 text-sm">
+                      Joined: {new Date(member?.joinedAt).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => handleRemoveUser(member._id)}
+                  className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-xl shadow-sm hover:shadow-md transition-all mt-3 sm:mt-0 w-full sm:w-auto"
+                >
+                  Remove
+                </button>
+              </div>
+            ))
+          ) : (
+            <p className="text-gray-400 text-center">No team members added yet.</p>
+          )}
         </div>
       </div>
-
-      {/* Team Members */}
-      <div className="space-y-4">
-        {teamMembers.length > 0 ? (
-          teamMembers.map((member) => (
-            <div
-              key={member._id}
-              className="flex items-center justify-between bg-gray-800 p-4 rounded-2xl border border-gray-700 hover:bg-gray-700 shadow-md transition-all"
-            >
-              <div className="flex items-center gap-4">
-                <img
-                  src={member.image ? member.image : profile}
-                  alt={member.name}
-                  className="w-12 h-12 rounded-full object-cover border-2 border-blue-500"
-                />
-                <div>
-                  <p className="font-semibold">{member.name} ({member.email})</p>
-                  <p className="text-gray-400 text-sm">
-                    Joined: {new Date(member?.joinedAt).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })}
-                  </p>
-                </div>
-              </div>
-              <button
-                onClick={() => handleRemoveUser(member._id)}
-                className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-xl shadow-sm hover:shadow-md transition-all cursor-pointer"
-              >
-                Remove
-              </button>
-            </div>
-          ))
-        ) : (
-          <p className="text-gray-400 text-center">No team members added yet.</p>
-        )}
-      </div>
     </div>
-  </div>
-
 
   );
 };

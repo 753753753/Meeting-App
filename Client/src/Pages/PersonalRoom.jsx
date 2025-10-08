@@ -59,7 +59,7 @@ function PersonalRoom() {
 
   return (
     <div className="flex-1 bg-gray-950 min-h-screen p-4 sm:p-6 md:p-10">
-      {meetings.length === 0 ? (
+      {(meetings?.length || 0) === 0 ? (
         <div>
           {role !== 'admin' && (
             <div className="flex justify-center items-center h-96 text-center">
@@ -108,23 +108,6 @@ function PersonalRoom() {
                     </button>
                   )}
                 </div>
-              </div>
-
-              <div className="flex flex-col sm:flex-row sm:items-start">
-                {role === 'admin' && (
-                  <div>
-                    <span className="w-32 font-medium text-gray-300 mt-1">Invite Link:</span>
-                    <a
-                      href={`${window.location.origin}/room/${meeting._id}`}
-                      className="text-blue-400 break-words hover:underline mt-1 sm:mt-0"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {`${window.location.origin}/room/${meeting._id}`}
-                    </a>
-                  </div>
-
-                )}
               </div>
             </div>
 
@@ -188,6 +171,7 @@ function PersonalRoom() {
         }}
       />
     </div>
+    
   );
 }
 
