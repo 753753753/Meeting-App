@@ -175,7 +175,7 @@ export default function Home() {
           style={{ backgroundImage: `url(${bgImage})` }}
         >
 
-          {(role === 'admin' || (role === 'user' && user.teamLeader)) && (
+          {(role === 'admin' || (role === 'user' && user?.teamLeader)) && (
             <div className="text-sm bg-[#FFFFFF0D] bg-opacity-50 px-3 py-1 rounded w-fit">
               {upcomingMeetingTime && !isNaN(upcomingMeetingTime) ? (
                 <>👉 Upcoming Meeting at: {format(upcomingMeetingTime, "hh:mm a")}</>
@@ -184,6 +184,7 @@ export default function Home() {
               )}
             </div>
           )}
+
           <div>
             <h2 className="text-4xl font-bold">{time}</h2>
             <p className="text-lg mt-1">{date}</p>
@@ -233,7 +234,7 @@ export default function Home() {
 
         {/* Upcoming Meetings */}
         <div>
-          {(role === 'admin' || (role === 'user' && user.teamLeader)) ? (
+          {(role === 'admin' || (role === 'user' && user?.teamLeader)) ? (
             <>
               {/* Header */}
               <div className="flex justify-between items-center mb-4 gap-2">

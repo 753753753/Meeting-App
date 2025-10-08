@@ -72,12 +72,13 @@ function Profile() {
 
                                 {/* Row 2: Email */}
                                 <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-1 sm:space-y-0 sm:space-x-4">
-                                    <AiOutlineMail className="text-blue-400 text-2xl" />
-                                    <div className="break-words w-full sm:w-auto">
+                                    <AiOutlineMail className="flex-shrink-0 text-blue-400 text-2xl" />
+                                    <div className="flex-1 break-words">
                                         <p className="text-gray-400 text-sm">Email</p>
                                         <p className="text-white font-medium break-words">{user?.email}</p>
                                     </div>
                                 </div>
+
                             </>
 
                         ) : (
@@ -136,60 +137,55 @@ function Profile() {
             </div>
 
             {/* Team Members Grid (Below Profile Section) */}
-            {role === 'admin' && (
+            {teamMembers.length > 0 && role === 'admin' && (
                 <div className="max-w-5xl w-full mt-10">
                     <h2 className="text-xl font-semibold mb-4 text-center sm:text-left">My Team Members</h2>
-                    {teamMembers.length > 0 ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {teamMembers.map((member) => (
-                                <div
-                                    key={member._id}
-                                    className="flex items-center bg-gray-800 p-4 rounded-2xl shadow-lg border border-gray-700 hover:scale-105 transform transition-transform duration-300"
-                                >
-                                    <img
-                                        src={member.image || profile}
-                                        alt={member.name}
-                                        className="w-14 h-14 rounded-full object-cover border-2 border-white mr-4"
-                                    />
-                                    <div>
-                                        <p className="font-semibold text-white">{member.name}</p>
-                                        <p className="text-gray-400 text-sm">{member.email}</p>
-                                        <p className="text-gray-400 text-xs">
-                                            Joined: {member.joinedAt
-                                                ? new Date(member.joinedAt).toLocaleDateString('en-US', {
-                                                    day: 'numeric',
-                                                    month: 'short',
-                                                    year: 'numeric'
-                                                })
-                                                : 'Not joined yet'}
-                                        </p>
-                                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {teamMembers.map((member) => (
+                            <div
+                                key={member._id}
+                                className="flex items-center bg-gray-800 p-4 rounded-2xl shadow-lg border border-gray-700 hover:scale-105 transform transition-transform duration-300"
+                            >
+                                <img
+                                    src={member.image || profile}
+                                    alt={member.name}
+                                    className="w-14 h-14 rounded-full object-cover border-2 border-white mr-4"
+                                />
+                                <div>
+                                    <p className="font-semibold text-white">{member.name}</p>
+                                    <p className="text-gray-400 text-sm">{member.email}</p>
+                                    <p className="text-gray-400 text-xs">
+                                        Joined: {member.joinedAt
+                                            ? new Date(member.joinedAt).toLocaleDateString('en-US', {
+                                                day: 'numeric',
+                                                month: 'short',
+                                                year: 'numeric'
+                                            })
+                                            : 'Not joined yet'}
+                                    </p>
                                 </div>
-                            ))}
-                        </div>
-                    ) : (
-                        <p className="text-gray-400">No team members added yet.</p>
-                    )}
+                            </div>
+                        ))}
+                    </div>
                 </div>
             )}
-            {role === 'user' && (
+
+            {teamLeader && role === 'user' && (
                 <div className="max-w-5xl w-full mt-10 mx-auto px-4">
                     <h2 className="text-xl font-semibold mb-4 text-center sm:text-left">My Team Leader</h2>
-                    {teamLeader ? (
-                        <div className="flex flex-col sm:flex-row items-center sm:items-start bg-gray-800 p-4 rounded-2xl shadow-lg border border-gray-700 hover:scale-105 transform transition-transform duration-300 mx-auto max-w-md sm:max-w-full">
-                            <img
-                                src={teamLeader.image || profile}
-                                alt={teamLeader.name}
-                                className="w-14 h-14 rounded-full object-cover border-2 border-white mb-3 sm:mb-0 sm:mr-4"
-                            />
-                            <div className="text-center sm:text-left break-words">
-                                <p className="font-semibold text-white">{teamLeader.name}</p>
-                                <p className="text-gray-400 text-sm">{teamLeader.email}</p>
-                            </div>
+
+                    <div className="flex flex-col sm:flex-row items-center sm:items-start bg-gray-800 p-4 rounded-2xl shadow-lg border border-gray-700 hover:scale-105 transform transition-transform duration-300 mx-auto max-w-md sm:max-w-full">
+                        <img
+                            src={teamLeader.image || profile}
+                            alt={teamLeader.name}
+                            className="w-14 h-14 rounded-full object-cover border-2 border-white mb-3 sm:mb-0 sm:mr-4"
+                        />
+
+                        <div className="text-center sm:text-left break-words">
+                            <p className="font-semibold text-white">{teamLeader.name}</p>
+                            <p className="text-gray-400 text-sm">{teamLeader.email}</p>
                         </div>
-                    ) : (
-                        <p className="text-gray-400 text-center">No team leader assigned yet.</p>
-                    )}
+                    </div>
                 </div>
             )}
 

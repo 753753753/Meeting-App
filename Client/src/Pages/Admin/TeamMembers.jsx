@@ -4,10 +4,10 @@ import { AiOutlinePaperClip, AiOutlineSearch } from "react-icons/ai";
 import { BiHappy } from "react-icons/bi";
 import { FaArrowLeft } from "react-icons/fa";
 import { MdSend } from "react-icons/md";
+import { useNavigate } from 'react-router-dom';
 import profile from "../../assets/profile.png";
 import { useUser } from "../../context/UserContext";
 import { fetchMessagesAPI, sendMessageAPI } from "../../utils/api";
-
 
 function TeamMembers() {
     const { teamMembers } = useUser();
@@ -17,6 +17,7 @@ function TeamMembers() {
     const [showEmoji, setShowEmoji] = useState(false);
     const [messages, setMessages] = useState([]);
     const messagesContainerRef = useRef(null);
+    const navigate = useNavigate();
 
     const loggedInUser = JSON.parse(localStorage.getItem("user"));
     const myUserId = loggedInUser?.id;
@@ -200,55 +201,82 @@ function TeamMembers() {
 
     // Member list with search
     return (
-        <div className="max-w-5xl w-full px-0 md:px-8 pb-8 mt-0 md:mt-4">
-            {/* Search */}
-            <div className="p-3">
-                <div className="flex items-center bg-gray-800 rounded-full px-4 py-2 transition-all focus-within:ring-2 focus-within:ring-blue-500">
-                    <AiOutlineSearch className="text-gray-400 mr-2" size={20} />
-                    <input
-                        type="text"
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        placeholder="Search Your Team Members..."
-                        className="bg-transparent text-white placeholder-gray-400 w-full focus:outline-none"
-                    />
-                </div>
-            </div>
-
+        <>
             {teamMembers.length > 0 ? (
-                <div className="flex flex-col bg-gray-900 rounded-xl overflow-hidden border border-gray-700 mt-2">
-                    {filteredMembers.length > 0 ? (
-                        filteredMembers.map((member, index) => (
-                            <div
-                                key={member._id}
-                                onClick={() => setSelectedMember(member)}
-                                className={`flex items-center p-4 cursor-pointer hover:bg-gray-800 transition-colors ${index !== filteredMembers.length - 1 ? "border-b border-gray-700" : ""
-                                    }`}
-                            >
-                                <img
-                                    src={member.image || profile}
-                                    alt={member.name}
-                                    className="w-12 h-12 rounded-full object-cover border border-gray-600 mr-4"
-                                />
-                                <div className="flex-1 min-w-0">
-                                    <div className="flex justify-between items-center">
-                                        <p className="font-semibold text-white truncate">{member.name}</p>
-                                        <span className="text-sm text-gray-400">online</span>
+                <div className="max-w-5xl w-full px-0 md:px-8 pb-8 mt-0 md:mt-4">
+                    {/* Search */}
+                    <div className="p-3">
+                        <div className="flex items-center bg-gray-800 rounded-full px-4 py-2 transition-all focus-within:ring-2 focus-within:ring-blue-500">
+                            <AiOutlineSearch className="text-gray-400 mr-2" size={20} />
+                            <input
+                                type="text"
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                                placeholder="Search Your Team Members..."
+                                className="bg-transparent text-white placeholder-gray-400 w-full focus:outline-none"
+                            />
+                        </div>
+                    </div>
+                    <div className="flex flex-col bg-gray-900 rounded-xl overflow-hidden border border-gray-700 mt-2">
+                        {filteredMembers.length > 0 ? (
+                            filteredMembers.map((member, index) => (
+                                <div
+                                    key={member._id}
+                                    onClick={() => setSelectedMember(member)}
+                                    className={`flex items-center p-4 cursor-pointer hover:bg-gray-800 transition-colors ${index !== filteredMembers.length - 1 ? "border-b border-gray-700" : ""
+                                        }`}
+                                >
+                                    <img
+                                        src={member.image || profile}
+                                        alt={member.name}
+                                        className="w-12 h-12 rounded-full object-cover border border-gray-600 mr-4"
+                                    />
+                                    <div className="flex-1 min-w-0">
+                                        <div className="flex justify-between items-center">
+                                            <p className="font-semibold text-white truncate">{member.name}</p>
+                                            <span className="text-sm text-gray-400">online</span>
+                                        </div>
+                                        <p className="text-gray-400 text-sm truncate">
+                                            Hey there! I’m using this app 👋
+                                        </p>
                                     </div>
-                                    <p className="text-gray-400 text-sm truncate">
-                                        Hey there! I’m using this app 👋
-                                    </p>
                                 </div>
-                            </div>
-                        ))
-                    ) : (
-                        <p className="text-gray-400 text-center py-6">No team members found.</p>
-                    )}
+                            ))
+                        ) : (
+                            <p className="text-gray-400 text-center py-6">No team members found.</p>
+                        )}
+                    </div>
                 </div>
             ) : (
-                <p className="text-gray-400">No team members added yet.</p>
+                <div className="flex flex-col items-center justify-center h-full text-center px-4">
+                    <div className="bg-gray-900 p-6 rounded-2xl shadow-2xl flex flex-col items-center space-y-4 border border-gray-700">
+                        <svg
+                            className="w-12 h-12 text-blue-500 animate-bounce"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M17 8h2a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2V10a2 2 0 012-2h2m10 0V6a5 5 0 00-10 0v2h10z"></path>
+                        </svg>
+                        <p className="text-white text-lg sm:text-xl font-semibold">
+                            You don’t have any team members to chat with.
+                        </p>
+                        <p className="text-gray-400 text-sm sm:text-base">
+                            Invite your team members to start chatting!
+                        </p>
+                        <button className="mt-2 bg-blue-600 text-white font-semibold px-5 py-2 rounded-full shadow-md hover:bg-blue-500 hover:scale-105 transition duration-200 cursor-pointer" onClick={() =>
+                            navigate('/admindashboard')
+                        }>
+                            Add Team Members
+                        </button>
+                    </div>
+                </div>
             )}
-        </div>
+
+        </>
+
     );
 }
 
