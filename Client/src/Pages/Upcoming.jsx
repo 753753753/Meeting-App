@@ -147,11 +147,7 @@ const Upcoming = () => {
                 <h4 className="font-semibold text-lg text-white">{meeting.title}</h4>
               </div>
               <p className="text-sm text-white mt-3">
-                {new Date(meeting.date).toLocaleString("en-IN", {
-                  timeZone: "Asia/Kolkata",
-                  dateStyle: "medium",
-                  timeStyle: "short",
-                })}
+                {new Date(meeting.date).toISOString().slice(0, 16)}
               </p>
 
 
