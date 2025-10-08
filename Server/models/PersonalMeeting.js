@@ -9,10 +9,6 @@ const meetingSchema = new mongoose.Schema({
     type:String,
     required: true,
   },
-  date: {
-    type: Date,
-    required: true,
-  },
   participants: {
     type: [String], // You can also reference users if needed
     default: [],
