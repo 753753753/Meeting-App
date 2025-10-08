@@ -107,20 +107,6 @@ const Upcoming = () => {
     navigate(`/room/${meetingId}`);
   };
 
-  const formatForDisplay = (dateString) => {
-    const date = new Date(dateString);
-    const options = {
-      timeZone: "Asia/Kolkata",
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true, // ✅ AM/PM format
-    };
-    return date.toLocaleString("en-IN", options).replace(",", "");
-  };
-
   return (
     <div className="flex-1 p-4 md:p-6 bg-gray-950 min-h-screen">
       <div className="flex justify-between items-center mb-6">
@@ -159,7 +145,14 @@ const Upcoming = () => {
                 <h4 className="font-semibold text-lg text-white">{meeting.title}</h4>
               </div>
               <p className="text-sm text-white mt-3">
-                {formatForDisplay(meeting.date)}
+                {(() => {
+                  const iso = new Date(meeting.date).toISOString().slice(0, 16); // "2025-10-09T01:33"
+                  const [datePart, timePart] = iso.split("T");
+                  let [hour, minute] = timePart.split(":").map(Number);
+                  const ampm = hour >= 12 ? "PM" : "AM";
+                  hour = hour % 12 || 12; // convert 0 -> 12
+                  return `${datePart.replace(/-/g, "-")}, ${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")} ${ampm}`;
+                })()}
               </p>
 
 
