@@ -108,38 +108,24 @@ const Upcoming = () => {
   };
 
   // utils.js or inside your component
-const formatMeetingDateSlice = (dateString) => {
-  if (!dateString) return "";
+  const formatMeetingDateSlice = (dateString) => {
+    if (!dateString) return "";
 
-  // Convert to ISO and slice first 16 chars: "YYYY-MM-DDTHH:MM"
-  const iso = new Date(dateString).toISOString().slice(0, 16); 
-  const [datePart, timePart] = iso.split("T");
+    // Convert to ISO and slice first 16 chars: "YYYY-MM-DDTHH:MM"
+    const iso = new Date(dateString).toISOString().slice(0, 16);
+    const [datePart, timePart] = iso.split("T");
 
-  if (!datePart || !timePart) return "";
+    if (!datePart || !timePart) return "";
 
-  let [year, month, day] = datePart.split("-");
-  let [hour, minute] = timePart.split(":").map(Number);
+    let [year, month, day] = datePart.split("-");
+    let [hour, minute] = timePart.split(":").map(Number);
 
-  const ampm = hour >= 12 ? "PM" : "AM";
-  hour = hour % 12 || 12; // convert 0 -> 12
+    const ampm = hour >= 12 ? "PM" : "AM";
+    hour = hour % 12 || 12; // convert 0 -> 12
 
-  return `${day}-${month}-${year}, ${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")} ${ampm}`;
-};
+    return `${day}-${month}-${year}, ${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")} ${ampm}`;
+  };
 
-// Format current date in same slice style
-const formatNowSlice = () => {
-  const now = new Date();
-  const iso = now.toISOString().slice(0, 16); // "YYYY-MM-DDTHH:MM"
-  const [datePart, timePart] = iso.split("T");
-  let [year, month, day] = datePart.split("-");
-  let [hour, minute] = timePart.split(":").map(Number);
-
-  const ampm = hour >= 12 ? "PM" : "AM";
-  hour = hour % 12 || 12;
-
-  return `${day}-${month}-${year}, ${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")} ${ampm}`;
-};
-  
   return (
     <div className="flex-1 p-4 md:p-6 bg-gray-950 min-h-screen">
       <div className="flex justify-between items-center mb-6">
@@ -191,17 +177,23 @@ const formatNowSlice = () => {
                   <div className="w-8 h-8 rounded-full bg-[#2E3450] text-white text-xs flex items-center justify-center border-2 border-[#1C1F2E]">+9</div>
                 </div>
                 <div className="flex gap-2 justify-start sm:justify-end mt-4 sm:mt-0">
-                  {formatMeetingDateSlice(meeting.date) <= formatNowSlice() && (
-                    <button
-                      className="bg-blue-600 text-white px-3 py-1 rounded cursor-pointer text-sm"
-                      onClick={() => {
-                        setMeetingToStart(meeting._id);
-                        setIsStartModalOpen(true);
-                      }}
-                    >
-                      Start
-                    </button>
-                  )}
+                  {(() => {
+                    const meetingDateUTC = new Date(meeting.date); // UTC
+                    const nowUTC = new Date(new Date().getTime() + new Date().getTimezoneOffset() * 60000); // convert local time to UTC
+
+                    return meetingDateUTC <= nowUTC ? (
+                      <button
+                        className="bg-blue-600 text-white px-3 py-1 rounded cursor-pointer text-sm"
+                        onClick={() => {
+                          setMeetingToStart(meeting._id);
+                          setIsStartModalOpen(true);
+                        }}
+                      >
+                        Start
+                      </button>
+                    ) : null;
+                  })()}
+
                   <button
                     className="bg-[#252A41] text-white px-3 py-1 rounded cursor-pointer text-sm"
                     onClick={() => handleCopyInvitation(meeting._id)}
