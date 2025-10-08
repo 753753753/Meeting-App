@@ -26,93 +26,71 @@ exports.createMeeting = async (req, res) => {
 
     await meeting.save();
 
-    // Email setup using Ethereal
+    // Email setup using Gmail
     const transporter = nodemailer.createTransport({
-      //   service: process.env.MAIL_SERVICE, // Use Gmail as the service
       host: "smtp.gmail.com",
-
       port: 587,
-
-      secure: false, // true for 465, false for other ports
-
+      secure: false,
       auth: {
-        user: process.env.EMAIL_ADDRESS, // Your email
-
-        pass: process.env.EMAIL_PASSWORD, // Your email password or app-specific password if 2FA is enabled
+        user: process.env.EMAIL_ADDRESS,
+        pass: process.env.EMAIL_PASSWORD,
       },
     });
+
+    let emailFailed = false;
 
     // Send email to each team member
     for (let member of teamLeader.teamMembers) {
       const mailOptions = {
-        from: `"${teamLeader.name}" <${teamLeader.email}>`, // dynamic sender with backticks removed since inside object literal string
+        from: `"${teamLeader.name}" <${teamLeader.email}>`,
         to: member.email,
-        subject: `New Meeting Scheduled: ${title}`, // use backticks for template literals
+        subject: `New Meeting Scheduled: ${title}`,
         html: `
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <style>
-            body {
-              font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-              background-color: #f4f4f4;
-              padding: 20px;
-              color: #333;
-            }
-            .container {
-              max-width: 600px;
-              margin: auto;
-              background-color: #ffffff;
-              border-radius: 10px;
-              padding: 30px;
-              box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            }
-            h2 {
-              color: #4CAF50;
-            }
-            p {
-              font-size: 16px;
-              line-height: 1.6;
-            }
-            .highlight {
-              font-weight: bold;
-              color: #333;
-            }
-            .footer {
-              margin-top: 30px;
-              font-size: 13px;
-              color: #888;
-              text-align: center;
-            }
-          </style>
-        </head>
-        <body>
-          <div class="container">
-            <h2>Meeting Scheduled</h2>
-            <p>Hello <span class="highlight">${member.name}</span>,</p>
-            <p>Your team leader <span class="highlight">${
-              teamLeader.name
-            }</span> has scheduled a meeting.</p>
-            <p><span class="highlight">Title:</span> ${title}</p>
-            <p><span class="highlight">Date & Time:</span> ${new Date(
-              date
-            ).toLocaleString()}</p>
-            <p>Please be on time and come prepared.</p>
-
-            <div class="footer">
-              © ${new Date().getFullYear()} Your Company. All rights reserved.
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <style>
+              body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f4; padding: 20px; color: #333; }
+              .container { max-width: 600px; margin: auto; background-color: #ffffff; border-radius: 10px; padding: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+              h2 { color: #4CAF50; }
+              p { font-size: 16px; line-height: 1.6; }
+              .highlight { font-weight: bold; color: #333; }
+              .footer { margin-top: 30px; font-size: 13px; color: #888; text-align: center; }
+            </style>
+          </head>
+          <body>
+            <div class="container">
+              <h2>Meeting Scheduled</h2>
+              <p>Hello <span class="highlight">${member.name}</span>,</p>
+              <p>Your team leader <span class="highlight">${teamLeader.name}</span> has scheduled a meeting.</p>
+              <p><span class="highlight">Title:</span> ${title}</p>
+              <p><span class="highlight">Date & Time:</span> ${new Date(date).toLocaleString()}</p>
+              <p>Please be on time and come prepared.</p>
+              <div class="footer">
+                © ${new Date().getFullYear()} Your Company. All rights reserved.
+              </div>
             </div>
-          </div>
-        </body>
-      </html>
-    `,
+          </body>
+        </html>
+      `,
       };
-       await transporter.sendMail(mailOptions);
+
+      try {
+        await transporter.sendMail(mailOptions);
+      } catch (err) {
+        console.error(`Error sending email to ${member.email}:`, err);
+        emailFailed = true; // mark email failure
+      }
     }
 
-    res
-      .status(201)
-      .json({ message: "Meeting created and emails sent", meeting });
+    if (emailFailed) {
+      res.status(201).json({
+        message: "Meeting created, but some emails could not be sent.",
+        meeting,
+      });
+    } else {
+      res.status(201).json({ message: "Meeting created and all emails sent successfully.", meeting });
+    }
   } catch (error) {
     console.error("Error creating meeting:", error);
     res.status(500).json({ message: "Error creating meeting", error });
