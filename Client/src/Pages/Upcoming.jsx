@@ -137,6 +137,7 @@ const Upcoming = () => {
       ) : (
         <div className="grid md:grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
           {meetings.map((meeting, index) => (
+            console.log(new Date(meeting.date).toISOString().slice(0, 19)),
             <div key={index} className="bg-[#1C1F2E] p-4 rounded-lg shadow relative">
               <div className="absolute top-4 right-4 flex gap-2">
                 <button className="text-white hover:text-blue-400 cursor-pointer" onClick={() => {
