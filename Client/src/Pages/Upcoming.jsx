@@ -166,11 +166,13 @@ const Upcoming = () => {
                 </div>
                 <div className="flex gap-2 justify-start sm:justify-end mt-4 sm:mt-0">
                   {(() => {
-                    const meetingTime = new Date(new Date(meeting.date).toISOString()).getTime();
+                    // Step 1: Parse the meeting date
+                    const meetingTime = Date.parse(meeting.date); // returns NaN if invalid
                     const now = Date.now();
                     const startBuffer = 5 * 60 * 1000; // 5 minutes early
 
-                    if (meetingTime - startBuffer <= now) {
+                    // Step 2: Only render if meetingTime is valid
+                    if (!isNaN(meetingTime) && meetingTime - startBuffer <= now) {
                       return (
                         <button
                           className="bg-blue-600 text-white px-3 py-1 rounded cursor-pointer text-sm"
@@ -185,6 +187,7 @@ const Upcoming = () => {
                     }
                     return null;
                   })()}
+
 
 
                   <button
