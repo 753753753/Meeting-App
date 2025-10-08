@@ -1,14 +1,13 @@
-import { useSelector } from 'react-redux';
-import { useContext, useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
-import { SpeechContext } from '../context/SpeechContext';
 import { ZegoUIKitPrebuilt } from '@zegocloud/zego-uikit-prebuilt';
+import { useContext, useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { appId, serverSecret } from '../Config';
+import { SpeechContext } from '../context/SpeechContext';
+import { useUser } from '../context/UserContext'; // adjust path as needed
+import { clearTranscript } from '../redux/slices/transcriptSlice';
 import { deletePersonalMeeting, endMeeting, saveMeetingData } from '../utils/api';
 import recognition from '../utils/speechRecognition';
-import { useDispatch } from 'react-redux';
-import { clearTranscript } from '../redux/slices/transcriptSlice';
-import { useUser } from '../context/UserContext'; // adjust path as needed
 
 function Room() {
   const dispatch = useDispatch();
@@ -64,7 +63,7 @@ function Room() {
           if (withRecording) {
             await endMeeting(roomid);
             alert('Meeting saved to Previous Meetings And Notes Available in a few seconds...😄');
-            window.location.href = '/dashboard';
+            window.location.href = 'https://meeting-app-client.onrender.com/';
             const summary = await saveMeetingData(roomid, transcriptRef.current);
             console.log('AI Summary:', summary);
 
@@ -87,7 +86,7 @@ function Room() {
           alert('You have left the meeting.');
         }
 
-        window.location.href = '/dashboard';
+        window.location.href = 'https://meeting-app-client.onrender.com/';
       },
     });
 
