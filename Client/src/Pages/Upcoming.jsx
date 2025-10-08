@@ -108,7 +108,7 @@ const Upcoming = () => {
 };
 
 
-
+  console.log("meetings" , meetings);
   return (
     <div className="flex-1 p-4 md:p-6 bg-gray-950 min-h-screen">
       <div className="flex justify-between items-center mb-6">

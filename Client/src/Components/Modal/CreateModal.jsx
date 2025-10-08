@@ -16,41 +16,46 @@ const CreateModal = ({ onClose, setActiveModal }) => {
     e.preventDefault();
 
     if (!scheduleTitle || !scheduleDate) {
-      setError('Title and Date are required');
+      setError("Title and Date are required");
       return;
     }
 
     try {
       const participantsArray = scheduleParticipants
-        ? scheduleParticipants.split(',').map((p) => p.trim())
+        ? scheduleParticipants.split(",").map((p) => p.trim())
         : [];
+
+      // ✅ Convert selected date/time to UTC without timezone shift
+      const localDate = new Date(scheduleDate);
+      const utcDate = new Date(localDate.getTime() - localDate.getTimezoneOffset() * 60000);
 
       const response = await createPersonalMeeting(
         scheduleTitle,
-        scheduleDate,
+        utcDate.toISOString(), // send corrected UTC time
         password,
-        participantsArray,
+        participantsArray
       );
 
       if (response.meeting) {
-        setSuccess('Meeting scheduled successfully!');
+        setSuccess("Meeting scheduled successfully!");
         setTimeout(() => {
-          setSuccess('');
-          setActiveModal?.(null); // optional chaining in case setActiveModal is not passed
+          setSuccess("");
+          setActiveModal?.(null);
           onClose?.();
-          setScheduleTitle('');
-          setScheduleDate('');
-          setScheduleParticipants('');
-          setPassword('');
+          setScheduleTitle("");
+          setScheduleDate("");
+          setScheduleParticipants("");
+          setPassword("");
         }, 1000);
       } else {
-        setError(response.message || 'Failed to schedule meeting');
+        setError(response.message || "Failed to schedule meeting");
       }
     } catch (err) {
       console.error(err);
-      setError('Something went wrong');
+      setError("Something went wrong");
     }
   };
+
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm bg-black/40">
