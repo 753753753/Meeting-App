@@ -6,7 +6,6 @@ const CreateModal = ({ onClose, setActiveModal }) => {
   const navigate = useNavigate();
 
   const [scheduleTitle, setScheduleTitle] = useState('');
-  const [scheduleDate, setScheduleDate] = useState('');
   const [scheduleParticipants, setScheduleParticipants] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -24,13 +23,9 @@ const CreateModal = ({ onClose, setActiveModal }) => {
       const participantsArray = scheduleParticipants
         ? scheduleParticipants.split(",").map((p) => p.trim())
         : [];
-
-      // ✅ Convert input directly to UTC using toISOString()
-      const localDate = new Date(scheduleDate);
-
+        
       const response = await createPersonalMeeting(
         scheduleTitle,
-        localDate.toISOString(), // Correct UTC datetime
         password,
         participantsArray
       );
@@ -80,13 +75,6 @@ const CreateModal = ({ onClose, setActiveModal }) => {
             value={scheduleTitle}
             onChange={(e) => setScheduleTitle(e.target.value)}
             className="w-full bg-[#2E3450] text-white placeholder-gray-400 px-4 py-2 rounded-md"
-          />
-
-          <input
-            type="datetime-local"
-            value={scheduleDate}
-            onChange={(e) => setScheduleDate(e.target.value)}
-            className="w-full bg-[#2E3450] text-white px-4 py-2 rounded-md"
           />
 
           <input

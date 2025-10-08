@@ -178,7 +178,13 @@ export default function Home() {
           {(role === 'admin' || (role === 'user' && user?.teamLeader)) && (
             <div className="text-sm bg-[#FFFFFF0D] bg-opacity-50 px-3 py-1 rounded w-fit">
               {upcomingMeetingTime && !isNaN(upcomingMeetingTime) ? (
-                <>👉 Upcoming Meeting at: {format(upcomingMeetingTime, "hh:mm a")}</>
+                <>👉 Upcoming Meeting at: {(() => {
+                  const iso = new Date(upcomingMeetingTime).toISOString().slice(11, 16); // "01:33"
+                  let [hour, minute] = iso.split(":").map(Number);
+                  const ampm = hour >= 12 ? "PM" : "AM";
+                  hour = hour % 12 || 12; // convert 0 -> 12
+                  return `${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")} ${ampm}`;
+                })()}</>
               ) : (
                 <>No Upcoming Meeting Today 😄</>
               )}
@@ -267,7 +273,15 @@ export default function Home() {
                         <h4 className="font-semibold text-lg text-white">{meeting.title}</h4>
                       </div>
                       <p className="text-sm text-white mt-3">
-                        {new Date(meeting.date).toLocaleString()}
+                        {(() => {
+                          const iso = new Date(meeting.date).toISOString().slice(0, 16); // "2025-10-09T01:33"
+                          const [datePart, timePart] = iso.split("T");
+                          let [year, month, day] = datePart.split("-");
+                          let [hour, minute] = timePart.split(":").map(Number);
+                          const ampm = hour >= 12 ? "PM" : "AM";
+                          hour = hour % 12 || 12; // convert 0 -> 12
+                          return `${day}-${month}-${year}, ${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")} ${ampm}`;
+                        })()}
                       </p>
 
                       <div className="mt-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">

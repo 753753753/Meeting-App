@@ -65,7 +65,17 @@ function Previous() {
               <div className="text-white">
                 <FaRegCalendarAlt className="mb-2 text-2xl" />
                 <h4 className="font-semibold text-lg">{meeting.title}</h4>
-                <p className="text-sm mt-2">{meeting.date}</p>
+                <p className="text-sm mt-2">
+                  {(() => {
+                  const iso = new Date(meeting.date).toISOString().slice(0, 16); // "2025-10-09T01:33"
+                  const [datePart, timePart] = iso.split("T");
+                  let [year, month, day] = datePart.split("-");
+                  let [hour, minute] = timePart.split(":").map(Number);
+                  const ampm = hour >= 12 ? "PM" : "AM";
+                  hour = hour % 12 || 12; // convert 0 -> 12
+                  return `${day}-${month}-${year}, ${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")} ${ampm}`;
+                })()}
+                </p>
               </div>
 
               <div className="mt-5 flex -space-x-3">

@@ -7,7 +7,7 @@ import { getAllNotes, deleteNoteById, downloadNoteById } from '../utils/api';
 import { useUser } from '../context/UserContext'; // adjust path as needed
 const Recordings = () => {
   const [notes, setNotes] = useState([]);
- const { role } = useUser(); // Destructure role from context
+  const { role } = useUser(); // Destructure role from context
   useEffect(() => {
     fetchNotes();
   }, []);
@@ -92,7 +92,7 @@ const Recordings = () => {
           {notes.map((note) => (
             <div key={note._id} className="bg-[#1C1F2E] p-4 rounded-lg shadow rounded-xl relative">
               {/* Top-right icons */}
-              <div className="absolute top-4 right-4 flex gap-2"  style={{ display: role === 'admin' ? 'block' : 'none' }}>
+              <div className="absolute top-4 right-4 flex gap-2" style={{ display: role === 'admin' ? 'block' : 'none' }}>
                 <button
                   onClick={() => deleteNote(note._id)}  // Handle delete
                   className="text-white hover:text-red-400 cursor-pointer"
@@ -110,7 +110,17 @@ const Recordings = () => {
               <div className="flex items-center gap-2 mt-3">
                 <h4 className="font-semibold text-lg text-white">{note.meetingDetails.title}</h4>
               </div>
-              <p className="text-sm text-white mt-3">{note.meetingDetails.date}</p>
+              <p className="text-sm text-white mt-3">
+                {(() => {
+                  const iso = new Date(note.meetingDetails.date).toISOString().slice(0, 16); // "2025-10-09T01:33"
+                  const [datePart, timePart] = iso.split("T");
+                  let [year, month, day] = datePart.split("-");
+                  let [hour, minute] = timePart.split(":").map(Number);
+                  const ampm = hour >= 12 ? "PM" : "AM";
+                  hour = hour % 12 || 12; // convert 0 -> 12
+                  return `${day}-${month}-${year}, ${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")} ${ampm}`;
+                })()}
+              </p>
 
               {/* Notes Summary */}
               {note.summary && (

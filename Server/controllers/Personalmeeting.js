@@ -2,14 +2,10 @@ const PersonalMeeting = require('../models/PersonalMeeting');
 const User = require('../models/User');
 exports.createPersonalMeeting = async (req, res) => {
   try {
-    const { title, date, password, participants } = req.body;
-    console.log(title, date, participants, password);
-    console.log(req.user.id);
-
+    const { title,password, participants } = req.body;
     const meeting = new PersonalMeeting({
       title,
       password,
-      date,
       participants,
       createdBy: req.user.id,
     });
