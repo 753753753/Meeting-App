@@ -145,15 +145,23 @@ const Upcoming = () => {
                 <h4 className="font-semibold text-lg text-white">{meeting.title}</h4>
               </div>
               <p className="text-sm text-white mt-3">
-                {(() => {
-                  const iso = new Date(meeting.date).toISOString().slice(0, 16); // "2025-10-09T01:33"
-                  const [datePart, timePart] = iso.split("T");
-                  let [year, month, day] = datePart.split("-");
-                  let [hour, minute] = timePart.split(":").map(Number);
-                  const ampm = hour >= 12 ? "PM" : "AM";
-                  hour = hour % 12 || 12; // convert 0 -> 12
-                  return `${day}-${month}-${year}, ${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")} ${ampm}`;
-                })()}
+                <p className="text-sm text-white mt-3">
+                  {(() => {
+                    const dateStr = meeting.date; // e.g., "2025-10-09T01:33"
+                    if (!dateStr) return "";
+
+                    const [datePart, timePart] = dateStr.split("T");
+                    if (!datePart || !timePart) return dateStr;
+
+                    const [year, month, day] = datePart.split("-");
+                    let [hour, minute] = timePart.split(":").map(Number);
+                    const ampm = hour >= 12 ? "PM" : "AM";
+                    hour = hour % 12 || 12;
+
+                    return `${day}-${month}-${year}, ${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")} ${ampm}`;
+                  })()}
+                </p>
+
               </p>
 
 
