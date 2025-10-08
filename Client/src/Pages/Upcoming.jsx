@@ -148,10 +148,11 @@ const Upcoming = () => {
                 {(() => {
                   const iso = new Date(meeting.date).toISOString().slice(0, 16); // "2025-10-09T01:33"
                   const [datePart, timePart] = iso.split("T");
+                  let [year, month, day] = datePart.split("-");
                   let [hour, minute] = timePart.split(":").map(Number);
                   const ampm = hour >= 12 ? "PM" : "AM";
                   hour = hour % 12 || 12; // convert 0 -> 12
-                  return `${datePart.replace(/-/g, "-")}, ${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")} ${ampm}`;
+                  return `${day}-${month}-${year}, ${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")} ${ampm}`;
                 })()}
               </p>
 
