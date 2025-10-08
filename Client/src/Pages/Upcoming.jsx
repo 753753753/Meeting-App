@@ -107,17 +107,19 @@ const Upcoming = () => {
     navigate(`/room/${meetingId}`);
   };
 
-  const formatDateTime = (dateString) => {
+  const formatForDisplay = (dateString) => {
     const date = new Date(dateString);
-    const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const year = date.getFullYear();
-    const hours = String(date.getHours()).padStart(2, "0");
-    const minutes = String(date.getMinutes()).padStart(2, "0");
-
-    return `${day}-${month}-${year}, ${hours}:${minutes}`;
+    const options = {
+      timeZone: "Asia/Kolkata",
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true, // ✅ AM/PM format
+    };
+    return date.toLocaleString("en-IN", options).replace(",", "");
   };
-
 
   return (
     <div className="flex-1 p-4 md:p-6 bg-gray-950 min-h-screen">
@@ -157,7 +159,7 @@ const Upcoming = () => {
                 <h4 className="font-semibold text-lg text-white">{meeting.title}</h4>
               </div>
               <p className="text-sm text-white mt-3">
-                 {formatDateTime(meeting.date)}
+                {formatForDisplay(meeting.date)}
               </p>
 
 
