@@ -2,6 +2,7 @@ const Meeting = require("../models/Meeting");
 const User = require("../models/User");
 const nodemailer = require("nodemailer");
 
+
 exports.createMeeting = async (req, res) => {
   try {
     const { title, date } = req.body;
@@ -25,6 +26,13 @@ exports.createMeeting = async (req, res) => {
     });
 
     await meeting.save();
+
+    // Check if emails should be sent (use environment variable)
+    if (process.env.SEND_EMAILS !== "true") {
+      return res
+        .status(201)
+        .json({ message: "Meeting created (emails skipped).", meeting });
+    }
 
     // Email setup using Gmail
     const transporter = nodemailer.createTransport({
@@ -79,7 +87,7 @@ exports.createMeeting = async (req, res) => {
         await transporter.sendMail(mailOptions);
       } catch (err) {
         console.error(`Error sending email to ${member.email}:`, err);
-        emailFailed = true; // mark email failure
+        emailFailed = true;
       }
     }
 
@@ -89,13 +97,17 @@ exports.createMeeting = async (req, res) => {
         meeting,
       });
     } else {
-      res.status(201).json({ message: "Meeting created and all emails sent successfully.", meeting });
+      res.status(201).json({
+        message: "Meeting created and all emails sent successfully.",
+        meeting,
+      });
     }
   } catch (error) {
     console.error("Error creating meeting:", error);
     res.status(500).json({ message: "Error creating meeting", error });
   }
 };
+
 
 exports.getMeetings = async (req, res) => {
   try {
