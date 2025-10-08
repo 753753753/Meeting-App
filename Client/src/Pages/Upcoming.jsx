@@ -107,20 +107,6 @@ const Upcoming = () => {
     navigate(`/room/${meetingId}`);
   };
 
-  const formatLocalISO = (date = new Date()) => {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    const hours = String(date.getHours()).padStart(2, "0");
-    const minutes = String(date.getMinutes()).padStart(2, "0");
-    const seconds = String(date.getSeconds()).padStart(2, "0");
-
-    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
-  };
-
-  console.log(formatLocalISO(new Date()));
-
-
   return (
     <div className="flex-1 p-4 md:p-6 bg-gray-950 min-h-screen">
       <div className="flex justify-between items-center mb-6">
@@ -137,7 +123,6 @@ const Upcoming = () => {
       ) : (
         <div className="grid md:grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
           {meetings.map((meeting, index) => (
-            console.log(new Date(meeting.date).toISOString().slice(0, 19)),
             <div key={index} className="bg-[#1C1F2E] p-4 rounded-lg shadow relative">
               <div className="absolute top-4 right-4 flex gap-2">
                 <button className="text-white hover:text-blue-400 cursor-pointer" onClick={() => {
@@ -181,17 +166,26 @@ const Upcoming = () => {
                   <div className="w-8 h-8 rounded-full bg-[#2E3450] text-white text-xs flex items-center justify-center border-2 border-[#1C1F2E]">+9</div>
                 </div>
                 <div className="flex gap-2 justify-start sm:justify-end mt-4 sm:mt-0">
-                  {new Date(meeting.date).toISOString().slice(0, 19) <= formatLocalISO(new Date()) && (
-                    <button
-                      className="bg-blue-600 text-white px-3 py-1 rounded cursor-pointer text-sm"
-                      onClick={() => {
-                        setMeetingToStart(meeting._id);
-                        setIsStartModalOpen(true);
-                      }}
-                    >
-                      Start
-                    </button>
-                  )}
+                  {(() => {
+                    // Meeting date is UTC
+                    const meetingDateUTC = new Date(meeting.date);
+
+                    // Convert local current time to UTC
+                    const now = new Date();
+                    const nowUTC = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
+
+                    return meetingDateUTC <= nowUTC ? (
+                      <button
+                        className="bg-blue-600 text-white px-3 py-1 rounded cursor-pointer text-sm"
+                        onClick={() => {
+                          setMeetingToStart(meeting._id);
+                          setIsStartModalOpen(true);
+                        }}
+                      >
+                        Start
+                      </button>
+                    ) : null;
+                  })()}
                   <button
                     className="bg-[#252A41] text-white px-3 py-1 rounded cursor-pointer text-sm"
                     onClick={() => handleCopyInvitation(meeting._id)}
