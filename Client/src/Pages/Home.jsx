@@ -299,7 +299,6 @@ export default function Home() {
                         </div>
 
                         <div className="flex gap-2 justify-start sm:justify-end mt-4 sm:mt-0">
-                          {new Date(meeting.date) <= new Date() && (
                             <button
                               className="bg-blue-600 text-white px-3 py-1 rounded cursor-pointer text-sm"
                               onClick={() => {
@@ -309,7 +308,6 @@ export default function Home() {
                             >
                               Start
                             </button>
-                          )}
                           <button
                             className="bg-[#252A41] text-white px-3 py-1 rounded cursor-pointer text-sm"
                             onClick={() => handleCopyInvitation(meeting._id)}
