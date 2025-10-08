@@ -25,13 +25,18 @@ const CreateModal = ({ onClose, setActiveModal }) => {
         ? scheduleParticipants.split(",").map((p) => p.trim())
         : [];
 
-      // ✅ Convert selected date/time to UTC without timezone shift
-      const localDate = new Date(scheduleDate);
+      // 🕒 Convert local datetime (from input) to UTC correctly
+      const [datePart, timePart] = scheduleDate.split("T");
+      const [year, month, day] = datePart.split("-").map(Number);
+      const [hour, minute] = timePart.split(":").map(Number);
+
+      // Create date in local timezone
+      const localDate = new Date(year, month - 1, day, hour, minute);
       const utcDate = new Date(localDate.getTime() - localDate.getTimezoneOffset() * 60000);
 
       const response = await createPersonalMeeting(
         scheduleTitle,
-        utcDate.toISOString(), // send corrected UTC time
+        utcDate.toISOString(), // Correct UTC datetime
         password,
         participantsArray
       );
