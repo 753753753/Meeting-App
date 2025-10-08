@@ -1,5 +1,6 @@
 // src/utils/api.js
-const API_URL = import.meta.env.VITE_API_URL || "https://meeting-app-server-fph4.onrender.com/api";
+const API_URL = "https://meeting-app-server-fph4.onrender.com/api";
+// const API_URL = "http://localhost:5000/api";
 
 // Helper to get the auth token from localStorage
 function getAuthHeaders() {
