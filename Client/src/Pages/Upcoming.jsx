@@ -107,24 +107,7 @@ const Upcoming = () => {
     navigate(`/room/${meetingId}`);
   };
 
-  // utils.js or inside your component
-  const formatMeetingDateSlice = (dateString) => {
-    if (!dateString) return "";
 
-    // Convert to ISO and slice first 16 chars: "YYYY-MM-DDTHH:MM"
-    const iso = new Date(dateString).toISOString().slice(0, 16);
-    const [datePart, timePart] = iso.split("T");
-
-    if (!datePart || !timePart) return "";
-
-    let [year, month, day] = datePart.split("-");
-    let [hour, minute] = timePart.split(":").map(Number);
-
-    const ampm = hour >= 12 ? "PM" : "AM";
-    hour = hour % 12 || 12; // convert 0 -> 12
-
-    return `${day}-${month}-${year}, ${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")} ${ampm}`;
-  };
 
   return (
     <div className="flex-1 p-4 md:p-6 bg-gray-950 min-h-screen">
@@ -164,9 +147,18 @@ const Upcoming = () => {
                 <h4 className="font-semibold text-lg text-white">{meeting.title}</h4>
               </div>
               <p className="text-sm text-white mt-3">
-                {formatMeetingDateSlice(meeting.date)}
+                {(() => {
+                  const date = new Date(meeting.date);
+                  let hours = date.getHours();
+                  const minutes = date.getMinutes().toString().padStart(2, '0');
+                  const ampm = hours >= 12 ? 'PM' : 'AM';
+                  hours = hours % 12 || 12; // convert 0 -> 12
+                  const day = date.getDate().toString().padStart(2, '0');
+                  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                  const year = date.getFullYear();
+                  return `${year}-${month}-${day} ${hours}:${minutes} ${ampm}`;
+                })()}
               </p>
-
 
               <div className="mt-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div className="flex -space-x-3 flex-wrap sm:flex-nowrap justify-start">
@@ -177,7 +169,7 @@ const Upcoming = () => {
                   <div className="w-8 h-8 rounded-full bg-[#2E3450] text-white text-xs flex items-center justify-center border-2 border-[#1C1F2E]">+9</div>
                 </div>
                 <div className="flex gap-2 justify-start sm:justify-end mt-4 sm:mt-0">
-                  {new Date(meeting.date).getTime() <= Date.now() && (
+                  {new Date(meeting.date) <= new Date() && (
                     <button
                       className="bg-blue-600 text-white px-3 py-1 rounded cursor-pointer text-sm"
                       onClick={() => {
