@@ -45,10 +45,10 @@ const Upcoming = () => {
   };
 
   const handleCopyInvitation = (roomid) => {
-      const inviteURL = `${window.location.origin}/room/${roomid}`;
-      navigator.clipboard.writeText(inviteURL)
-        .then(() => alert("Invitation link copied to clipboard!"))
-        .catch((err) => console.error('Failed to copy:', err));
+    const inviteURL = `${window.location.origin}/room/${roomid}`;
+    navigator.clipboard.writeText(inviteURL)
+      .then(() => alert("Invitation link copied to clipboard!"))
+      .catch((err) => console.error('Failed to copy:', err));
   };
 
   const handleSave = async () => {
@@ -67,48 +67,48 @@ const Upcoming = () => {
   const dispatch = useDispatch();
 
   const handleStart = (meetingId, withRecording = false) => {
-  const recognition = new window.webkitSpeechRecognition();
-  recognition.continuous = true;
-  recognition.interimResults = true;
-  recognition.lang = 'en-US';
+    const recognition = new window.webkitSpeechRecognition();
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.lang = 'en-US';
 
-  recognition.onresult = (event) => {
-    let interimTranscript = '';
-    let finalTranscript = '';
+    recognition.onresult = (event) => {
+      let interimTranscript = '';
+      let finalTranscript = '';
 
-    for (let i = event.resultIndex; i < event.results.length; i++) {
-      const transcript = event.results[i][0].transcript;
-      if (event.results[i].isFinal) {
-        finalTranscript += transcript;
-      } else {
-        interimTranscript += transcript;
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const transcript = event.results[i][0].transcript;
+        if (event.results[i].isFinal) {
+          finalTranscript += transcript;
+        } else {
+          interimTranscript += transcript;
+        }
       }
+
+      if (interimTranscript) {
+        console.log('Live transcript:', interimTranscript);
+      }
+
+      if (finalTranscript) {
+        dispatch(appendTranscript(finalTranscript.trim()));
+        console.log('Final transcript:', finalTranscript);
+      }
+    };
+
+    dispatch(clearTranscript()); // Clear only once at start
+    setIsListening(true);
+
+    if (withRecording) {
+      console.log('Recording started...');
+      setWithRecording(true);
     }
 
-    if (interimTranscript) {
-      console.log('Live transcript:', interimTranscript);
-    }
-
-    if (finalTranscript) {
-      dispatch(appendTranscript(finalTranscript.trim()));
-      console.log('Final transcript:', finalTranscript);
-    }
+    recognition.start();
+    navigate(`/room/${meetingId}`);
   };
 
-  dispatch(clearTranscript()); // Clear only once at start
-  setIsListening(true);
 
-  if (withRecording) {
-    console.log('Recording started...');
-    setWithRecording(true);
-  }
-
-  recognition.start();
-  navigate(`/room/${meetingId}`);
-};
-
-
-  console.log("meetings" , meetings);
+  console.log("meetings", meetings);
   return (
     <div className="flex-1 p-4 md:p-6 bg-gray-950 min-h-screen">
       <div className="flex justify-between items-center mb-6">
@@ -147,7 +147,11 @@ const Upcoming = () => {
                 <h4 className="font-semibold text-lg text-white">{meeting.title}</h4>
               </div>
               <p className="text-sm text-white mt-3">
-                {new Date(meeting.date).toLocaleString()}
+                {new Date(meeting.date).toLocaleString("en-IN", {
+                  timeZone: "Asia/Kolkata",
+                  dateStyle: "medium",
+                  timeStyle: "short",
+                })}
               </p>
 
               <div className="mt-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
